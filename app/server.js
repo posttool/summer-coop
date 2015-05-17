@@ -59,7 +59,7 @@ if (cluster.isMaster && config.cluster) {
   // flash for message & user in req locals
   app.use(flash());
   app.use(function (req, res, next) {
-    console.log(req.user)
+    console.log('user',req.user)
     res.locals.user = req.user;
     res.locals.moment = moment;
     next();

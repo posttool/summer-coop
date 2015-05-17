@@ -11,8 +11,8 @@ var config = {
 
     /* http://gadgets.ndtv.com/apps/features/how-to-remove-facebook-twitter-gmail-linkedin-dropbox-app-permissions-574272 */
     facebookAuth: {
-      clientID: 'xx',
-      clientSecret: 'xx',
+      clientID: '1398148860511689',
+      clientSecret: 'e52687d11e97f5b8d89236e42b55a588',
       callbackURL: 'http://localhost:5000/auth/facebook/callback'
     },
     twitterAuth: {
