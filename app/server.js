@@ -16,6 +16,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var nunjucks = require('nunjucks');
+var nunjucks_date_filter = require('nunjucks-date-filter');
 
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(session);
@@ -39,11 +40,13 @@ if (cluster.isMaster && config.cluster) {
   app.use(cookieParser());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  nunjucks.configure(__dirname + '/views', {
+  app.use(express.static(__dirname + '/public'));
+
+  var nenv = nunjucks.configure(__dirname + '/views', {
     autoescape: true,
     express: app
   });
-  app.use(express.static(__dirname + '/public'));
+  nenv.addFilter('date', nunjucks_date_filter);
 
   app.use(session({
     secret: 'huifdsuihfdsjoafnlk',
@@ -62,6 +65,7 @@ if (cluster.isMaster && config.cluster) {
   app.use(flash());
   app.use(function (req, res, next) {
     res.locals.user = req.user;
+//    res.locals.moment = moment;
     next();
   });
 

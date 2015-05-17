@@ -21,22 +21,27 @@
                 <label>Children</label>
 
                 <div class="row">
-                    <input type="text" name="kid" value="{{user.kids[0].name}}" class="one-third column"
+                    <input type="text" name="kid" value="{{user.kids[0].name}}"
+                           class="four columns medium_size"
                            placeholder="Name">
-                    <input type="text" name="kid" value="{{user.kids[0].birthday}}" class="one-third column"
-                           placeholder="Age">
-                    <input type="text" name="kid" value="{{user.kids[0].notes}}" class="one-third column"
+                    <input type="text" name="kid" {% if user.kids[0].birthday %}value="{{user.kids[0].birthday | date('MM/DD/YYYY')}}"{% endif %}
+                           class="four columns medium_size"
+                           placeholder="Birthday MM/DD/YYYY">
+                    <input type="text" name="kid" value="{{user.kids[0].notes}}"
+                           class="four columns medium_size"
                            placeholder="Notes">
                 </div>
                 <div class="row">
-                    <input type="text" name="kid" value="{{user.kids[1].name}}" class="four columns">
-                    <input type="text" name="kid" value="{{user.kids[1].birthday}}" class="four columns">
-                    <input type="text" name="kid" value="{{user.kids[1].notes}}" class="four columns">
+                    <input type="text" name="kid" value="{{user.kids[1].name}}" class="four columns medium_size">
+                    <input type="text" name="kid" {% if user.kids[1].birthday %}value="{{user.kids[1].birthday | date('MM/DD/YYYY')}}"{% endif %}
+                           class="four columns medium_size">
+                    <input type="text" name="kid" value="{{user.kids[1].notes}}" class="four columns medium_size">
                 </div>
                 <div class="row">
-                    <input type="text" name="kid" value="{{user.kids[2].name}}" class="four columns">
-                    <input type="text" name="kid" value="{{user.kids[2].birthday}}" class="four columns">
-                    <input type="text" name="kid" value="{{user.kids[2].notes}}" class="four columns">
+                    <input type="text" name="kid" value="{{user.kids[2].name}}" class="four columns medium_size">
+                    <input type="text" name="kid" {% if user.kids[2].birthday %}value="{{user.kids[2].birthday | date('MM/DD/YYYY')}}"{% endif %}
+                           class="four columns medium_size">
+                    <input type="text" name="kid" value="{{user.kids[2].notes}}" class="four columns medium_size">
                 </div>
             </div>
             <button>Save</button>
