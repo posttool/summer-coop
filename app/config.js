@@ -9,7 +9,9 @@ var config = {
     api_endpoint: 'http://localhost:5000',
 
 
-    /* http://gadgets.ndtv.com/apps/features/how-to-remove-facebook-twitter-gmail-linkedin-dropbox-app-permissions-574272 */
+    /*
+    http://gadgets.ndtv.com/apps/features/how-to-remove-facebook-twitter-gmail-linkedin-dropbox-app-permissions-574272
+    */
     facebookAuth: {
       clientID: '1398148860511689',
       clientSecret: 'e52687d11e97f5b8d89236e42b55a588',
@@ -21,8 +23,8 @@ var config = {
       callbackURL: 'http://localhost:5000/auth/twitter/callback'
     },
     googleAuth: {
-      clientID: 'xxx',
-      clientSecret: 'xxx',
+      clientID: '480518992161-3qq0ag0gti0r015alf7jb7epbs3fb5kd.apps.googleusercontent.com',
+      clientSecret: 'H3gH3tkMSWa0zlVNvqPuJnvw',
       callbackURL: 'http://localhost:5000/auth/google/callback'
     },
 
