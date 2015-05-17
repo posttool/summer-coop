@@ -3,9 +3,8 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var bcrypt = require('bcrypt-nodejs');
 
-// define the schema for our user model
+// USER
 var userSchema = mongoose.Schema({
-
   local: {
     email: String,
     password: String,
@@ -30,44 +29,44 @@ var userSchema = mongoose.Schema({
   },
   contact: {
     email: String,
-    name: String
-  }
-
+    name: String,
+    phone1: String,
+    phone2: String
+  },
+  kids: [
+    {name: String, birthday: Date, notes: String}
+  ]
 });
 
-// generating a hash
 userSchema.methods.generateHash = function (password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-// checking if password is valid
 userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.local.password);
 };
 
-userSchema.methods.identifier = function () {
-  if (this.local.email)
-    return this.local.email;
-  else if (this.facebook.name)
-    return this.facebook.name;
-  else if (this.twitter.username)
-    return this.twitter.username;
-  else if (this.google.name)
-    return this.google.name;
+exports.getUser = function (conn) {
+  return conn.model('User', userSchema)
 };
 
-// create the model for users and expose it to our app
-exports.getUser = function(conn) { return conn.model('User', userSchema) };
 
 
+
+// EVENT
 var eventSchema = mongoose.Schema({
   when: Date,
   duration: Number,
   location: String,
+  spaces: Number,
   leader: {type: ObjectId, ref: 'User'},
   backup: {type: ObjectId, ref: 'User'},
   notes: String,
-
+  kids: [
+    {type: ObjectId, ref: 'Kid'}
+  ]
 });
 
-exports.getEvent = function(conn) { return conn.model('Event', eventSchema) };
+exports.getEvent = function (conn) {
+  return conn.model('Event', eventSchema)
+};

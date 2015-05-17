@@ -1,6 +1,47 @@
-<html>hi
+{% extends "base.html" %}
 
-   profile
-{{ user }}
+{% block main %}
+<div class="container">
+    <div class="main">
+        Please complete your profile.
+        <form method="post">
+            <div>
+                <label>Name</label>
+                <input type="text" name="name" value="{{user.contact.name}}">
+            </div>
+            <div>
+                <label>Phone</label>
+                <input type="text" name="phone1" value="{{user.contact.phone1}}">
+            </div>
+            <div>
+                <label>Phone Alternate</label>
+                <input type="text" name="phone2" value="{{user.contact.phone2}}">
+            </div>
+            <div>
+                <label>Children</label>
 
-</html>
+                <div class="row">
+                    <input type="text" name="kid" value="{{user.kids[0].name}}" class="one-third column"
+                           placeholder="Name">
+                    <input type="text" name="kid" value="{{user.kids[0].birthday}}" class="one-third column"
+                           placeholder="Age">
+                    <input type="text" name="kid" value="{{user.kids[0].notes}}" class="one-third column"
+                           placeholder="Notes">
+                </div>
+                <div class="row">
+                    <input type="text" name="kid" value="{{user.kids[1].name}}" class="four columns">
+                    <input type="text" name="kid" value="{{user.kids[1].birthday}}" class="four columns">
+                    <input type="text" name="kid" value="{{user.kids[1].notes}}" class="four columns">
+                </div>
+                <div class="row">
+                    <input type="text" name="kid" value="{{user.kids[2].name}}" class="four columns">
+                    <input type="text" name="kid" value="{{user.kids[2].birthday}}" class="four columns">
+                    <input type="text" name="kid" value="{{user.kids[2].notes}}" class="four columns">
+                </div>
+            </div>
+            <button>Save</button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

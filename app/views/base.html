@@ -21,10 +21,15 @@
     <header class="bottom-border">
         <div class="container">
             <div id="header__content">
-
-                <h1 id="header__title" class="u-pull-left">{% block title %}Summer Coop{% endblock %}</h1>
+                <a href="/"><h1 id="header__title" class="u-pull-left">Summer Coop</h1></a>
+                <h1 id="header__title" class="u-pull-right">
+                    {% if user %}
+                    <a href="/profile" class="button">Profile</a>
+                    <a href="/logout" class="button">Logout</a>
+                    {% endif %}
+                </h1>
             </div>
-            {% block header %}{% endblock %}
+
         </div>
     </header>
     <!--__ MAIN __-->
