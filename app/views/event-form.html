@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+    <div class="main">
+        Event.
+        <form method="post">
+            <div>
+                <label>When</label>
+                <input type="datetime-local" name="when" value="{{event.when | date('YYYY-MM-DDTHH:mm')}}">
+            </div>
+            <div>
+                <label>How long (hours)</label>
+                <input type="text" name="duration" value="{{event.duration}}">
+            </div>
+            <div>
+                <label>Where</label>
+                <input type="text" name="location" value="{{event.location}}">
+            </div>
+            <div>
+                <label>Spaces available</label>
+                <input type="number" name="spaces" value="{{event.spaces}}">
+            </div>
+            <div>
+                <label>Notes (optional)</label>
+                <textarea name="notes" value="{{event.notes}}"></textarea>
+            </div>
+
+            <button>Save</button>
+            {% if event._id %}<a href="#">Delete</a>{% endif %}
+        </form>
+
+    </div>
+</div>
+{% endblock %}

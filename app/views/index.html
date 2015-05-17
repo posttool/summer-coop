@@ -4,12 +4,22 @@
 <div class="container">
     <div class="main__left">
         {% if user %}
+        {% for event in events %}
+        <div class="event">
+            Hosted by {{event.leader.contact.name}} on {{event.when | date('MMM DD hh:mm')}}
+            for {{event.duration}} hours at {{event.location}}.
+            {% if event.spaces > events.kids.length %}Space available!{% endif %}
+            {% if event.leader._id.toString() == user._id.toString() %}<a href="#">edit</a>{% endif %}
+            <a href="/event/{{e._id}}">view</a>
+        </div>
 
+        {% endfor %}
 
-        <a href="add" class="button">Add an Event</a>
+        <a href="/event/create" class="button">Add an Event</a>
 
         {% else %}
         <h3>Log in with</h3>
+
         <div><a href="/auth/facebook" class="button"><span class="fa fa-facebook"></span> Facebook</a></div>
         <div><a href="/auth/google" class="button"><span class="fa fa-google-plus"></span> Google</a></div>
         <!--<div><a href="/auth/twitter" class="button"><span class="fa fa-twitter"></span> Twitter</a></div>-->

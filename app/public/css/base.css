@@ -160,6 +160,9 @@ hr {
 
 input[type="text"],
 input[type="password"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="number"],
 textarea {
     font-size: 2.4rem;
     border: 1px solid #888;

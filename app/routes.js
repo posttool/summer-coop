@@ -13,7 +13,7 @@ module.exports = function (connection) {
 
   app.get('/', function (req, res) {
     if (req.user) {
-      Event.find({when: {$gt: new Date()}}).sort('-when').exec(function (err, events) {
+      Event.find({when: {$gt: new Date()}}).populate('leader').sort('when').exec(function (err, events) {
         res.render('index.html', {events: events});
       });
     } else
@@ -52,9 +52,35 @@ module.exports = function (connection) {
     });
   });
 
-  app.get('/add', guard.isLoggedIn, function (req, res) {
-    var user = req.user;
+  app.get('/event/create', guard.isLoggedIn, function (req, res) {
+    res.render('event-form.html', {event: {}});
+  });
 
+  app.post('/event/create', guard.isLoggedIn, function (req, res) {
+    var event = new Event({
+      leader: req.user,
+      when: moment(req.body.when),
+      location: req.body.location,
+      duration: req.body.duration,
+      location: req.body.location,
+      spaces: req.body.spaces,
+      notes: req.body.notes
+    });
+    event.save(function () {
+      res.redirect('/event/' + event._id);
+    });
+  });
+
+  app.get('/event/:id/update', guard.isLoggedIn, function (req, res) {
+    Event.findOne({_id: req.params.id}, function (err, e) {
+      res.render('event-form.html', {event: e});
+    });
+  });
+
+  app.get('/event/:id', guard.isLoggedIn, function (req, res) {
+    Event.findOne({_id: req.params.id}).populate('leader').exec(function (err, e) {
+      res.render('event-view.html', {event: e});
+    });
   });
 
   return app;
