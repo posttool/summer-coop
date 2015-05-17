@@ -3,12 +3,14 @@
 {% block main %}
 <div class="container">
     <div class="main">
-        Event.
+        <div>
+            {% if event.leader._id.toString() == user._id.toString() %}
+            This is your event <a href="#">edit</a>{% endif %}
+        </div>
         <div>
             Hosted by {{event.leader.contact.name}} on {{event.when | date('MMM DD hh:mm')}}
             for {{event.duration}} hours at {{event.location}}.
             {% if event.spaces > event.kids.length %}Space available!{% endif %}
-            {% if event.leader._id.toString() == user._id.toString() %}<a href="#">edit</a>{% endif %}
 
         </div>
         <div>

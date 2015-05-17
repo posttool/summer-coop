@@ -77,6 +77,20 @@ module.exports = function (connection) {
     });
   });
 
+  app.post('/event/:id/update', guard.isLoggedIn, function (req, res) {
+    Event.findOne({_id: req.params.id}, function (err, e) {
+      e.when = moment(req.body.when);
+      e.location = req.body.location;
+      e.duration = req.body.duration;
+      e.location = req.body.location;
+      e.spaces = req.body.spaces;
+      e.notes = req.body.notes;
+      e.save(function (err, se) {
+        res.render('event-form.html', {event: se});
+      })
+    });
+  });
+
   app.get('/event/:id', guard.isLoggedIn, function (req, res) {
     Event.findOne({_id: req.params.id}).populate('leader').exec(function (err, e) {
       res.render('event-view.html', {event: e});

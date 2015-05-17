@@ -9,8 +9,8 @@
             Hosted by {{event.leader.contact.name}} on {{event.when | date('MMM DD hh:mm')}}
             for {{event.duration}} hours at {{event.location}}.
             {% if event.spaces > events.kids.length %}Space available!{% endif %}
-            {% if event.leader._id.toString() == user._id.toString() %}<a href="#">edit</a>{% endif %}
-            <a href="/event/{{e._id}}">view</a>
+            {% if event.leader._id.toString() == user._id.toString() %}<a href="/event/{{event._id}}/update">edit</a>{% endif %}
+            <a href="/event/{{event._id}}">view</a>
         </div>
 
         {% endfor %}
