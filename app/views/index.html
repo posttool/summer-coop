@@ -1,10 +1,22 @@
-<html>hi
+{% extends "base.html" %}
+{% block header %}
+{% if user %}<a href="/logout" class="button">Logout</a>{% endif %}
+{% endblock %}
+{% block main %}
+<div class="container">
+    <div class="main__left">
 
-    <div><a href="/auth/facebook" class="button"><span class="fa fa-facebook"></span> Facebook</a></div>
-    <!--<div><a href="/auth/twitter" class="button"><span class="fa fa-twitter"></span> Twitter</a></div>-->
-    <div><a href="/auth/google" class="button"><span class="fa fa-google-plus"></span> Google</a></div>
-    <!--<div><a href="/auth/github" class="button"><span class="fa fa-google-plus"></span> Github</a></div>-->
+        {% if user %}
 
-{{ user }}
 
-</html>
+        {% else %}
+        Log in with
+        <div><a href="/auth/facebook" class="button"><span class="fa fa-facebook"></span> Facebook</a></div>
+        <div><a href="/auth/google" class="button"><span class="fa fa-google-plus"></span> Google</a></div>
+        <!--<div><a href="/auth/twitter" class="button"><span class="fa fa-twitter"></span> Twitter</a></div>-->
+        <!--<div><a href="/auth/github" class="button"><span class="fa fa-google-plus"></span> Github</a></div>-->
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,166 @@
+/*-- STYLES to pin footer to bottom of window on short pages --*/
+html,
+body {
+  margin:0;
+  padding:0;
+  height:100%;
+}
+
+img {
+  display: block;
+}
+
+#wrapper {
+  min-height:100%;
+  position:relative;
+}
+/*-- SECTIONS--*/
+
+header {
+  display: block;
+  /*height: 14rem;*/
+  width: 100%;
+  margin-bottom: 3.2rem;
+}
+#header__content {
+  width: 100%;
+  height: 13rem;
+}
+#header__logo {
+  margin: 3.2rem 0 0 0;
+}
+h1#header__title {
+  margin: 4.4rem 0 0 1rem;
+  padding: 0;
+  font-size: 2.6rem;
+}
+
+
+main {
+  box-sizing: border-box;
+  padding-bottom: 9rem; /* Height of the footer element */
+}
+
+.main__left {
+  width: 75%;
+  float: left;
+  padding-right: 2.5rem;
+  /*background-color: #fee;*/
+}
+
+.main__right {
+  width: 25%;
+  float: left;
+  /*background-color: #efefef;*/
+}
+
+footer {
+  box-sizing: border-box;
+  width:100%;
+  height:9rem;
+  position:absolute;
+  bottom:0;
+  left:0;
+}
+
+footer {
+  padding-top: 2.4rem;
+  /*margin-top: 2rem;*/
+  /*background-color: #231F20; color: #EEEDED;*/
+  font-size: 1.2rem; line-height: 1.6;
+}
+
+footer section a { display: block; }
+footer .row { margin-bottom: 0rem; }
+footer a { text-decoration: none; color: #EEEDED; }
+footer a:hover { text-decoration: none; color: #fff; }
+
+
+/*-- BUTTONS --*/
+
+.btn {
+
+  display: block; height: 14rem; width: 15rem;
+  /*border: 1px solid red;*/
+  margin-bottom: 2.5rem;
+}
+a.btn {
+  background-color: #F2F2F2;
+  color: #000;
+  text-decoration: none;
+  /*cursor: pointer;*/
+  margin-bottom: 2.5rem;
+}
+a.btn:hover {
+  /*color: #E7001F; */
+  background-color: #3DABDE;
+  /*cursor: pointer;*/
+}
+span.btn__icon {
+  display: block;
+  font-size: 6rem;  line-height: 11rem;
+  text-align: center;
+  width: 10rem; height: 9rem;
+  margin: auto;
+  cursor: pointer;
+}
+span.btn__txt {
+  display: block;
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: bold;
+  cursor: pointer;
+  /*height: 1.5rem; width: 1.4rem;*/
+}
+
+
+/*-- TAG REDEFINTIONS --*/
+
+div {
+  position: relative;
+  margin: 0;  padding: 0;
+  box-sizing: border-box;
+}
+
+a { color: #E7001F; }
+a:hover { color: #000; }
+
+hr { border-color: #888; }
+
+input[type="text"],
+input[type="password"],
+textarea
+{
+  font-size: 2.4rem;
+  border: 1px solid #888;
+}
+select {
+  font-size: 2.4rem;
+  border: 1px solid transparent;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  box-shadow: none;
+  background-color: #F2F2F2;
+  border-radius: 0;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  width: 50%;
+}
+
+input { width: 100%; box-sizing: border-box; }
+table { width: 100%; }
+textarea { width: 100%;  box-sizing: border-box; }
+
+
+/*-- UTILITY CLASSES-- */
+
+.bottom-border { border-bottom: 1px solid #888; }
+
+.disable {
+  pointer-events: none;
+  cursor: default;
+}
+.hidden {
+  display: none;
+}
+
+.bolder { font-weight: bold; }

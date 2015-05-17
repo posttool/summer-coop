@@ -15,11 +15,12 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
-var moment = require('moment');
-var config = require('./config');
-
 var nunjucks = require('nunjucks');
+
+var mongoose = require('mongoose');
+var MongoStore = require('connect-mongo')(session);
+var config = require('./config');
+var connection = mongoose.createConnection(config.db);
 
 
 if (cluster.isMaster && config.cluster) {
@@ -29,7 +30,8 @@ if (cluster.isMaster && config.cluster) {
 } else {
 
   // initialize passport strategies
-  require('./auth/passport')(passport, require('./auth/user'), config);
+  var User = require('./models').getUser(connection);
+  require('./auth/passport')(passport, User, config);
 
   var app = express();
 
@@ -59,17 +61,17 @@ if (cluster.isMaster && config.cluster) {
   // flash for message & user in req locals
   app.use(flash());
   app.use(function (req, res, next) {
-    console.log('user',req.user)
+    console.log('user', req.user)
     res.locals.user = req.user;
-    res.locals.moment = moment;
+//    res.locals.moment = moment;
     next();
   });
 
   // add passport routes
-  app.use(require('./auth/routes.js')(passport));
+  app.use(require('./auth/routes')(passport));
 
   // add site routes
-  app.use(require('./routes.js')());
+  app.use(require('./routes')(connection));
 
   var httpServer = http.createServer(app);
   httpServer.listen(config.ports.site);

@@ -110,6 +110,7 @@ module.exports = function (passport, User, configAuth) {
       process.nextTick(function () {
         if (!req.user) {
           User.findOne({ 'facebook.id': profile.id }, function (err, user) {
+          console.log("XXX?",err,user)
             if (err)
               return done(err);
             if (user) {
@@ -135,7 +136,7 @@ module.exports = function (passport, User, configAuth) {
               newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
               newUser.facebook.email = (profile.emails[0].value || '').toLowerCase();
               newUser.contact.email = newUser.facebook.email;
-              newUser.contact.name = user.facebook.givenName;
+              newUser.contact.name = newUser.facebook.givenName;
               newUser.save(function (err) {
                 if (err)
                   throw err;
