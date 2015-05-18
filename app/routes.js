@@ -79,6 +79,12 @@ module.exports = function (connection) {
     });
   });
 
+  app.get('/event/:id/remove', guard.isLoggedIn, function (req, res) {
+    Event.remove({leader: req.user, _id: req.params.id}, function (err, e) {
+      res.redirect('/');
+    });
+  });
+
   app.post('/event/:id/update', guard.isLoggedIn, function (req, res) {
     Event.findOne({_id: req.params.id}, function (err, e) {
       e.when = moment(req.body.when);
@@ -102,16 +108,20 @@ module.exports = function (connection) {
   app.get('/event/:id/add/:kid', guard.isLoggedIn, function (req, res) {
     Event.findOne({_id: req.params.id}).exec(function (err, e) {
       var kid = req.user.kids.id(req.params.kid);
-      e.kids.push(kid);
-      e.save(function (err, se) {
+      if (e.kids.id(kid)) {
         res.redirect('/event/' + e._id);
-      })
+      } else {
+        e.kids.push(kid);
+        e.save(function (err, se) {
+          res.redirect('/event/' + e._id);
+        });
+      }
     });
   });
 
   app.get('/event/:id/remove/:kid', guard.isLoggedIn, function (req, res) {
     Event.findOne({_id: req.params.id}).exec(function (err, e) {
-      var kid = user.kids.id(req.params.kid).remove();
+      var kid = e.kids.id(req.params.kid).remove();
       e.save(function (err, se) {
         res.redirect('/event/' + e._id);
       })

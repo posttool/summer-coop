@@ -27,7 +27,7 @@
             </div>
 
             <button>Save</button>
-            {% if event._id %}<a href="#">Delete</a>{% endif %}
+            {% if event._id %}<a href="/event/{{event._id}}/remove" class="button">Delete</a>{% endif %}
         </form>
 
     </div>

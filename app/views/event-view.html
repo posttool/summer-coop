@@ -1,37 +1,84 @@
 {% extends "base.html" %}
 
 {% block main %}
+<style>
+    .attending {
+        padding: 5px 0 5px 0px;
+    }
+
+    #select-kid {
+        width: 150px;
+        font-size: 1.7rem;
+    }
+</style>
 <div class="container">
     <div class="main">
-        <div>
-            <h1>
-                Hosted by {{event.leader.contact.name}} on {{event.when | date('MMM DD h:mma')}}
-                for {{event.duration}} hours at {{event.location}}.
-                {% if event.spaces > event.kids.length %}Space available!{% endif %}
-            </h1>
-        </div>
+        <h3>
+            <table>
+                <tr>
+                    <td>Host</td>
+                    <td>{{event.leader.contact.name}}</td>
+                </tr>
+                <tr>
+                    <td>Date</td>
+                    <td>{{event.when | date('MMM DD h:mma')}}</td>
+                </tr>
+                <tr>
+                    <td>Duration</td>
+                    <td>{{event.duration}} hours</td>
+                </tr>
+                <tr>
+                    <td>Location</td>
+                    <td>{{event.location}}</td>
+                </tr>
+                {% if event.notes %}
+                <tr>
+                    <td>Notes</td>
+                    <td>{{event.notes}}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td>Available</td>
+                    <td>{{event.spaces - event.kids.length}}</td>
+                </tr>
+            </table>
+        </h3>
         <div>
             <h3>Attending</h3>
-            {% for k in event.kids %}
-            {{k}}<br>
-            {% endfor %}
-            {% if event.kids.length == 0 %}
-            You are the first one here.
+
+            <div class="attending">
+                {% for k in event.kids %}
+                {% if k.name %}
+                {{k.name}}
+                {% if user.kids.id(k._id) %}
+                <a href="#" class="remove" data-id="{{k._id}}"><i class="fa fa-times-circle"></i></a>
+                {% endif %}
+                <br>
+                {% endif %}
+                {% endfor %}
+                {% if event.kids.length == 0 %}
+                You are the first one here.
+                {% endif %}
+            </div>
+        </div>
+
+        {% set mine = event.leader._id.toString() == user._id.toString() %}
+        <div id="add-kid-wrap">
+            {% if not mine %}
+            <a href="#" id="add-kid">Add</a>
+            <select id="select-kid">
+                {% for k in user.kids %}
+                {% if not event.kids.id(k._id) %}
+                <option value="{{k._id}}">{{k.name}}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
             {% endif %}
         </div>
 
-        <div>
-            {% if event.leader._id.toString() == user._id.toString() %}
-            This is your event <a href="/event/{{event._id}}/update">edit</a>
-            {% else %}
-            <select id="select-kid">
-                {% for k in user.kids %}
-                <option value="{{k._id}}">{{k.name}}</option>
-                {% endfor %}
-            </select>
-            <a href="#" id="add-kid">Add</a>
-            {% endif %}
-        </div>
+        {% if mine %}
+        <a href="/event/{{event._id}}/update" class="button">Edit</a>
+        {% endif %}
 
     </div>
 </div>
@@ -40,6 +87,13 @@
     $("#add-kid").click(function () {
         document.location.href = "/event/{{event._id}}/add/" + $s.val();
         return false;
-    })
+    });
+    $(".remove").click(function () {
+        var d = $(this).data("id").trim();
+        document.location.href = "/event/{{event._id}}/remove/" + d;
+        return false;
+    });
+    if ($s.find('option').length == 0)
+        $("#add-kid-wrap").hide();
 </script>
 {% endblock %}
