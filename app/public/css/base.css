@@ -42,6 +42,7 @@ h1#header__title {
 main {
     box-sizing: border-box;
     padding-bottom: 9rem; /* Height of the footer element */
+    font-size: 1.7rem;
 }
 
 .main__left {
@@ -161,6 +162,7 @@ hr {
 input[type="text"],
 input[type="password"],
 input[type="date"],
+input[type="datetime"],
 input[type="datetime-local"],
 input[type="number"],
 textarea {

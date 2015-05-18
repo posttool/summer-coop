@@ -8,8 +8,10 @@ var models = require('./models');
 module.exports = function (connection) {
 
   var app = express.Router();
-  //var User = models.getUser(connection);
+
+  var User = models.getUser(connection);
   var Event = models.getEvent(connection);
+  var Kid = models.getKid(connection);
 
   app.get('/', function (req, res) {
     if (req.user) {
@@ -34,7 +36,7 @@ module.exports = function (connection) {
       var bd = req.body.kid[i * 3 + 1];
       var notes = req.body.kid[i * 3 + 2];
       var has_data = name != '' && bd != '';
-      console.log(user.kids.length, i, has_data);
+      //console.log(user.kids.length, i, has_data);
       if (user.kids.length > i) {
         var kid = user.kids[i];
         kid.name = name;
@@ -94,6 +96,25 @@ module.exports = function (connection) {
   app.get('/event/:id', guard.isLoggedIn, function (req, res) {
     Event.findOne({_id: req.params.id}).populate('leader').exec(function (err, e) {
       res.render('event-view.html', {event: e});
+    });
+  });
+
+  app.get('/event/:id/add/:kid', guard.isLoggedIn, function (req, res) {
+    Event.findOne({_id: req.params.id}).exec(function (err, e) {
+      var kid = req.user.kids.id(req.params.kid);
+      e.kids.push(kid);
+      e.save(function (err, se) {
+        res.redirect('/event/' + e._id);
+      })
+    });
+  });
+
+  app.get('/event/:id/remove/:kid', guard.isLoggedIn, function (req, res) {
+    Event.findOne({_id: req.params.id}).exec(function (err, e) {
+      var kid = user.kids.id(req.params.kid).remove();
+      e.save(function (err, se) {
+        res.redirect('/event/' + e._id);
+      })
     });
   });
 

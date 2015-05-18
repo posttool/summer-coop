@@ -3,6 +3,20 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var bcrypt = require('bcrypt-nodejs');
 
+
+// KIDS
+
+var kidSchema = mongoose.Schema({
+  name: String,
+  birthday: Date,
+  notes: String
+});
+
+exports.getKid = function (conn) {
+  return conn.model('Kid', kidSchema)
+};
+
+
 // USER
 var userSchema = mongoose.Schema({
   local: {
@@ -33,9 +47,7 @@ var userSchema = mongoose.Schema({
     phone1: String,
     phone2: String
   },
-  kids: [
-    {name: String, birthday: Date, notes: String}
-  ]
+  kids: [kidSchema]
 });
 
 userSchema.methods.generateHash = function (password) {
@@ -53,6 +65,7 @@ exports.getUser = function (conn) {
 
 
 
+
 // EVENT
 var eventSchema = mongoose.Schema({
   when: Date,
@@ -62,9 +75,7 @@ var eventSchema = mongoose.Schema({
   leader: {type: ObjectId, ref: 'User'},
   backup: {type: ObjectId, ref: 'User'},
   notes: String,
-  kids: [
-    {type: ObjectId, ref: 'Kid'}
-  ]
+  kids: [kidSchema]
 });
 
 exports.getEvent = function (conn) {

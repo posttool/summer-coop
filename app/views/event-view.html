@@ -4,24 +4,42 @@
 <div class="container">
     <div class="main">
         <div>
-            {% if event.leader._id.toString() == user._id.toString() %}
-            This is your event <a href="#">edit</a>{% endif %}
+            <h1>
+                Hosted by {{event.leader.contact.name}} on {{event.when | date('MMM DD h:mma')}}
+                for {{event.duration}} hours at {{event.location}}.
+                {% if event.spaces > event.kids.length %}Space available!{% endif %}
+            </h1>
         </div>
         <div>
-            Hosted by {{event.leader.contact.name}} on {{event.when | date('MMM DD hh:mm')}}
-            for {{event.duration}} hours at {{event.location}}.
-            {% if event.spaces > event.kids.length %}Space available!{% endif %}
-
-        </div>
-        <div>
+            <h3>Attending</h3>
             {% for k in event.kids %}
             {{k}}<br>
             {% endfor %}
+            {% if event.kids.length == 0 %}
+            You are the first one here.
+            {% endif %}
         </div>
 
-        // for my children
-        <a href="#">Add</a>
+        <div>
+            {% if event.leader._id.toString() == user._id.toString() %}
+            This is your event <a href="/event/{{event._id}}/update">edit</a>
+            {% else %}
+            <select id="select-kid">
+                {% for k in user.kids %}
+                <option value="{{k._id}}">{{k.name}}</option>
+                {% endfor %}
+            </select>
+            <a href="#" id="add-kid">Add</a>
+            {% endif %}
+        </div>
 
     </div>
 </div>
+<script>
+    var $s = $("#select-kid");
+    $("#add-kid").click(function () {
+        document.location.href = "/event/{{event._id}}/add/" + $s.val();
+        return false;
+    })
+</script>
 {% endblock %}
