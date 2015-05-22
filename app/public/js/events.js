@@ -10,15 +10,15 @@ function draw_cal_for(d) {
       for (var j = 0; j < 7; j++) {
         if (j != 0 && j != 6) {
           var $c = $("<div class='four columns event'></div>");
-          var $d = $("<div class='header'></div>");
+          var $d = $("<div class='event_header'></div>");
           $d.append(d.format("dddd DD"));
           $c.append($d);
           var id = d.format('MM-DD');
           if (evtidx[id]) {
             evtidx[id].forEach(function (event) {
               var $d = $("<div class='event_item'></div>");
-              $d.click(function(){
-                location.href = '/event/'+event._id;
+              $d.click(function () {
+                location.href = '/event/' + event._id;
               })
               $d.append(event.leader.contact.name);
               if (event.spaces < event.kids.length)
