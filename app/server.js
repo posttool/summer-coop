@@ -38,7 +38,7 @@ if (cluster.isMaster && config.cluster) {
 
   app.use(morgan(process.env.NODE_ENV || 'dev'));
   app.use(cookieParser());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
   app.use(express.static(__dirname + '/public'));
 
@@ -47,6 +47,9 @@ if (cluster.isMaster && config.cluster) {
     express: app
   });
   nenv.addFilter('date', nunjucks_date_filter);
+  nenv.addFilter('dump', function (o) {
+    return JSON.stringify(o);
+  });
 
   app.use(session({
     secret: 'huifdsuihfdsjoafnlk',
@@ -65,7 +68,6 @@ if (cluster.isMaster && config.cluster) {
   app.use(flash());
   app.use(function (req, res, next) {
     res.locals.user = req.user;
-//    res.locals.moment = moment;
     next();
   });
 
@@ -80,7 +82,6 @@ if (cluster.isMaster && config.cluster) {
   console.log('site listening on port ' + config.ports.site);
   //var httpsServer = https.createServer(credentials, server);
   //httpsServer.listen(config.securePorts.site);
-
 
 }
 

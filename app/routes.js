@@ -14,13 +14,9 @@ module.exports = function (connection) {
   var Kid = models.getKid(connection);
 
   app.get('/', function (req, res) {
-    if (req.user) {
-      Event.find({when: {$gt: new Date()}}).populate('leader').sort('when').exec(function (err, events) {
-        res.render('index.html', {events: events});
-      });
-    } else
-      res.render('index.html');
+    res.render('index.html');
   });
+
 
   app.get('/profile', guard.isLoggedIn, function (req, res) {
     res.render('profile.html');
@@ -51,6 +47,13 @@ module.exports = function (connection) {
       console.log('save user', err, su);
 //      res.json({err: err, user: su});
       res.render('profile.html');
+    });
+  });
+
+  app.get('/events', guard.isLoggedIn, function (req, res) {
+    var when = moment(req.query.d);
+    Event.find({when: {$gt: when}}).populate('leader').sort('when').exec(function (err, events) {
+      res.json(events);
     });
   });
 

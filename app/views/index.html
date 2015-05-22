@@ -17,24 +17,66 @@
 <div class="container">
     {% if user %}
 
-        {% for event in events %}
-        {% if loop.index0 % 4 == 0 %}<div class="row">{% endif %}
-        <div class="four columns event" onclick="document.location.href='/event/{{event._id}}'">
-            <b>{{event.when | date('dddd')}}</b><br>
-            {{event.when | date('MMM DD')}}<br>
-            {{event.when | date('h:mma')}}<br>
-            {{event.location | truncate(20)}}<br>
+    <div id="calendar">
+        xxx
+    </div>
 
-            {% if event.spaces > event.kids.length %}
-            <i class="fa fa-heart-o"></i><br>
-            {% endif %}
-            {% if event.leader._id.toString() == user._id.toString() %}
-            <a href="/event/{{event._id}}/update">Edit</a>
-            {% endif %}
-        </div>
-        {% if loop.index0 % 4 == 3 or loop.last %}</div>{% endif %}
-        {% endfor %}
-    <a href="/event/create" class="button">Add an Event</a>
+    <script src="/js/lib/moment.min.js"></script>
+    <script>
+        function draw_cal_for(d) {
+            $.ajax('/events?d='+ d.format('YYYY-MM-DD')).done(function (events) {
+                var evtidx = {};
+                events.forEach(function(e){
+                    var id = moment(e.when).format('MM-DD');
+                    if (evtidx[id])
+                        evtidx[id].push(e);
+                    else
+                        evtidx[id] = [e];
+                });
+                console.log(evtidx)
+                d.startOf('week');
+                var $cal = $("#calendar");
+                $cal.empty();
+                for (var i = 0; i < 4; i++) {
+                    var s = '';
+                    var $row = $("<div class='row'></div>");
+                    $cal.append($row);
+                    for (var j = 0; j < 7; j++) {
+                        if (j != 0 && j != 6) {
+                            var $c = $("<div class='four columns event'></div>");
+                            var id = d.format('MM-DD');
+                            $c.text(d.format("dddd DD"));
+                            if (evtidx[id]) {
+                                $c.append("XXX"+evtidx[id]);
+                            }
+                            $row.append($c);
+                        }
+                        d.add(1, 'day');
+                    }
+                }
+            })
+        }
+        draw_cal_for(moment())
+    </script>
+
+
+    {% for event in events %}
+    <div class="four columns event" onclick="document.location.href='/event/{{event._id}}'">
+        <b>{{event.when | date('dddd')}}</b><br>
+        {{event.when | date('MMM DD')}}<br>
+        {{event.when | date('h:mma')}}<br>
+        {{event.location | truncate(20)}}<br>
+
+        {% if event.spaces > event.kids.length %}
+        <i class="fa fa-heart-o"></i><br>
+        {% endif %}
+        {% if event.leader._id.toString() == user._id.toString() %}
+        <a href="/event/{{event._id}}/update">Edit</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <a href="/event/create?date=" class="button">Add an Event</a>
 
     {% else %}
     <h3>Log in with</h3>
