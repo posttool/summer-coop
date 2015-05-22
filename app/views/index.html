@@ -13,6 +13,16 @@
     .event:hover {
         background-color: #d1e7f4;
     }
+
+    .event_item {
+        background-color: #55ffff;
+    }
+
+    .event_item.full{
+        background-color: #ff00ff;
+    }
+
+
 </style>
 <div class="container">
     {% if user %}
@@ -22,40 +32,8 @@
     </div>
 
     <script src="/js/lib/moment.min.js"></script>
+    <script src="/js/events.js"></script>
     <script>
-        function draw_cal_for(d) {
-            $.ajax('/events?d='+ d.format('YYYY-MM-DD')).done(function (events) {
-                var evtidx = {};
-                events.forEach(function(e){
-                    var id = moment(e.when).format('MM-DD');
-                    if (evtidx[id])
-                        evtidx[id].push(e);
-                    else
-                        evtidx[id] = [e];
-                });
-                console.log(evtidx)
-                d.startOf('week');
-                var $cal = $("#calendar");
-                $cal.empty();
-                for (var i = 0; i < 4; i++) {
-                    var s = '';
-                    var $row = $("<div class='row'></div>");
-                    $cal.append($row);
-                    for (var j = 0; j < 7; j++) {
-                        if (j != 0 && j != 6) {
-                            var $c = $("<div class='four columns event'></div>");
-                            var id = d.format('MM-DD');
-                            $c.text(d.format("dddd DD"));
-                            if (evtidx[id]) {
-                                $c.append("XXX"+evtidx[id]);
-                            }
-                            $row.append($c);
-                        }
-                        d.add(1, 'day');
-                    }
-                }
-            })
-        }
         draw_cal_for(moment())
     </script>
 
