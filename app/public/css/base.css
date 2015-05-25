@@ -149,6 +149,7 @@ div {
 
 a {
     color: #E7001F;
+    text-decoration: none;
 }
 
 a:hover {
@@ -180,7 +181,6 @@ select {
     border-radius: 0;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
-    width: 50%;
 }
 
 input {

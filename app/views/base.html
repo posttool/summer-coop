@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Summer Coop{% endblock %}</title>
-    <script src="/js/jquery-2.1.1.min.js"></script>
+    <script src="/js/lib/jquery-2.1.1.min.js"></script>
     {% block script %}{% endblock %}
     <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/css/normalize.css">
@@ -20,9 +20,11 @@
     <header class="bottom-border">
         <div class="container">
             <div id="header__content">
-                <a href="/"><h1 id="header__title" class="u-pull-left">Summer Coop</h1></a>
+                <a href="/"><h1 id="header__title" class="u-pull-left"><i class="fa fa-home"></i> Summer Coop</h1></a>
+
                 <h1 id="header__title" class="u-pull-right">
                     {% if user %}
+                    <span class="button" style="border:none;">{{user.contact.name}}</span>
                     <a href="/profile" class="button">Profile</a>
                     <a href="/logout" class="button">Logout</a>
                     {% endif %}

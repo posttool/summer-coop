@@ -7,11 +7,11 @@
         padding: 7px 0 0 0;
         margin-bottom: 12px;
         cursor: pointer;
-        height: 200px;
+        height: 160px;
     }
 
     .event:hover {
-        background-color: #d1e7f4;
+        background-color: #f7f7f7;
     }
 
     .event_header {
@@ -19,21 +19,68 @@
         margin: 0 0 15px 0;
         padding: 0 0 0 10px;
     }
+
     .event_item {
-        background-color: #ffa;
+        background-color: #ffffc2;
         margin: 0 0 5px 0;
-        padding: 0 0 0 10px;
+        padding: 3px 5px 3px 10px;
+        font-size: 1.4rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
-    .event_item.full{
+    .event_item:hover {
+        background-color: #ffff00;
+    }
+
+    .event_item.full {
         background-color: #fa5;
     }
 
+    .event_item.full:hover {
+        background-color: #ff8700;
+    }
+
+    .event_add {
+        margin: 10px 0 5px 0;
+        padding: 0 0 0 10px;
+        font-size: 1.4rem;
+    }
+
+    .event_add:hover {
+        color: #E7001F;
+    }
+
+    .before {
+        opacity: .4;
+        background-color: #eeeeee;
+    }
 
 </style>
 <div class="container">
     {% if user %}
 
+    <div id="top_row">
+        <div>
+            <a href="#" id="last-month"><i class="fa fa-angle-left"></i></a>
+            <select id="select-month">
+                <option>January</option>
+                <option>February</option>
+                <option>March</option>
+                <option>April</option>
+                <option>May</option>
+                <option>June</option>
+                <option>July</option>
+                <option>August</option>
+                <option>September</option>
+                <option>October</option>
+                <option>November</option>
+                <option>December</option>
+            </select>
+            <a href="#" id="next-month"><i class="fa fa-angle-right"></i></a>
+        </div>
+    </div>
     <div id="calendar">
         xxx
     </div>
@@ -44,24 +91,6 @@
         draw_cal_for(moment())
     </script>
 
-
-    {% for event in events %}
-    <div class="four columns event" onclick="document.location.href='/event/{{event._id}}'">
-        <b>{{event.when | date('dddd')}}</b><br>
-        {{event.when | date('MMM DD')}}<br>
-        {{event.when | date('h:mma')}}<br>
-        {{event.location | truncate(20)}}<br>
-
-        {% if event.spaces > event.kids.length %}
-        <i class="fa fa-heart-o"></i><br>
-        {% endif %}
-        {% if event.leader._id.toString() == user._id.toString() %}
-        <a href="/event/{{event._id}}/update">Edit</a>
-        {% endif %}
-    </div>
-    {% endfor %}
-
-    <a href="/event/create?date=" class="button">Add an Event</a>
 
     {% else %}
     <h3>Log in with</h3>

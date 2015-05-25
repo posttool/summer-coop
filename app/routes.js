@@ -58,7 +58,7 @@ module.exports = function (connection) {
   });
 
   app.get('/event/create', guard.isLoggedIn, function (req, res) {
-    res.render('event-form.html', {event: {}});
+    res.render('event-form.html', {event: {when: moment(req.query.d).hour(12)}});
   });
 
   app.post('/event/create', guard.isLoggedIn, function (req, res) {
