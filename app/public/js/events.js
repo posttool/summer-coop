@@ -18,7 +18,6 @@ $sel.change(function () {
 var $next = $("#next-month");
 $next.click(function () {
   d.startOf('month');
-  console.log(d.format('MMMM DD'))
   d.add(1, 'month');
   draw_cal_for()
 });
@@ -26,14 +25,17 @@ $next.click(function () {
 var now = moment().subtract(1, 'day');
 var evtidx = {};
 
-function draw_cal_for() {
+function draw_cal_for(day) {
+  if (day)
+    d = day;
+  var $cal = $("#calendar");
+  $cal.empty().text('Loading events...');
   $sel.val(d.format('MMMM'));
   $.ajax('/events?d=' + d.format('YYYY-MM-DD')).done(function (events) {
     index_events(events);
+    $cal.empty();
     var d0 = moment(d);
     d0.startOf('week');
-    var $cal = $("#calendar");
-    $cal.empty();
     for (var i = 0; i < 5; i++) {
       var $row = $("<div class='row'></div>");
       $cal.append($row);
@@ -83,11 +85,10 @@ function get_calendar_item(day) {
         location.href = '/event/' + event._id;
       });
       $c.append($d);
-      console.log(event)
     });
   }
   if (!before) {
-    var $add = $("<div class='event_add'><i class='fa fa-plus'></i>  Add</div>");
+    var $add = $("<div class='event_add'><i class='fa fa-plus'></i> Add an event</div>");
     $add.hide();
     $c.append($add);
     $c.mouseover(function () {

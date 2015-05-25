@@ -19,7 +19,7 @@ module.exports = function (connection) {
 
 
   app.get('/profile', guard.isLoggedIn, function (req, res) {
-    res.render('profile.html');
+    res.render('user-form.html');
   });
 
   app.post('/profile', guard.isLoggedIn, function (req, res) {
@@ -45,8 +45,13 @@ module.exports = function (connection) {
     }
     user.save(function (err, su) {
       console.log('save user', err, su);
-//      res.json({err: err, user: su});
-      res.render('profile.html');
+      res.render('user-form.html');
+    });
+  });
+
+  app.get('/user/:id', guard.isLoggedIn, function (req, res) {
+    User.findOne({_id: req.params.id}, function (err, e) {
+      res.render('user-view.html', {user1: e});
     });
   });
 
@@ -82,14 +87,18 @@ module.exports = function (connection) {
     });
   });
 
-  app.get('/event/:id/remove', guard.isLoggedIn, function (req, res) {
+  app.get('/event/:id/remove', guard.isLoggedIn, function (req, res, next) {
     Event.remove({leader: req.user, _id: req.params.id}, function (err, e) {
+      if (err || !e)
+        next(new Error('not found'));
       res.redirect('/');
     });
   });
 
-  app.post('/event/:id/update', guard.isLoggedIn, function (req, res) {
-    Event.findOne({_id: req.params.id}, function (err, e) {
+  app.post('/event/:id/update', guard.isLoggedIn, function (req, res, next) {
+    Event.findOne({leader: req.user, _id: req.params.id}, function (err, e) {
+      if (err || !e)
+        next(new Error('not found'));
       e.when = moment(req.body.when);
       e.location = req.body.location;
       e.duration = req.body.duration;

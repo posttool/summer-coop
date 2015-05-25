@@ -2,8 +2,8 @@
 
 {% block main %}
 <style>
-    .attending {
-        padding: 5px 0 5px 0px;
+    #add-kid-wrap {
+        margin: 20px 0 0 0;
     }
 
     #select-kid {
@@ -11,13 +11,21 @@
         font-size: 1.7rem;
     }
 </style>
+{% set mine = event.leader._id.toString() == user._id.toString() %}
+
 <div class="container">
     <div class="main">
         <h3>
             <table>
                 <tr>
-                    <td>Host</td>
-                    <td>{{event.leader.contact.name}}</td>
+                    <td width="30%">Host</td>
+                    <td>
+                        {% if mine %}
+                        <a href="/profile">Me</a>
+                        {% else %}
+                        <a href="/user/{{event.leader._id}}">{{event.leader.contact.name}}</a>
+                        {% endif %}
+                    </td>
                 </tr>
                 <tr>
                     <td>Date</td>
@@ -41,46 +49,54 @@
                     <td>Available</td>
                     <td>{{event.spaces - event.kids.length}}</td>
                 </tr>
+                <tr valign="top">
+                    <td>Attending</td>
+                    <td>
+                        <div>
+                            {% for k in event.kids %}
+                            {% if k.name %}
+                            {{k.name}}
+                            {% if user.kids.id(k._id) %}
+                            <a href="#" class="remove" data-id="{{k._id}}"><i class="fa fa-times-circle"></i></a>
+                            {% endif %}
+                            <br>
+                            {% endif %}
+                            {% endfor %}
+                            {% if event.kids.length == 0 %}
+                            No one <i>yet</i>.
+                            {% endif %}
+                        </div>
+
+                        <div id="add-kid-wrap">
+                            {% if not mine %}
+                            <a href="#" id="add-kid">Add</a>
+                            <select id="select-kid">
+                                {% for k in user.kids %}
+                                {% if not event.kids.id(k._id) %}
+                                <option value="{{k._id}}">{{k.name}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% endif %}
+                        </div>
+
+                    </td>
+                </tr>
             </table>
         </h3>
-        <div>
-            <h3>Attending</h3>
+    </div>
 
-            <div class="attending">
-                {% for k in event.kids %}
-                {% if k.name %}
-                {{k.name}}
-                {% if user.kids.id(k._id) %}
-                <a href="#" class="remove" data-id="{{k._id}}"><i class="fa fa-times-circle"></i></a>
-                {% endif %}
-                <br>
-                {% endif %}
-                {% endfor %}
-                {% if event.kids.length == 0 %}
-                No one <i>yet</i>.
-                {% endif %}
-            </div>
-        </div>
-
-        {% set mine = event.leader._id.toString() == user._id.toString() %}
-        <div id="add-kid-wrap">
-            {% if not mine %}
-            <a href="#" id="add-kid">Add</a>
-            <select id="select-kid">
-                {% for k in user.kids %}
-                {% if not event.kids.id(k._id) %}
-                <option value="{{k._id}}">{{k.name}}</option>
-                {% endif %}
-                {% endfor %}
-            </select>
-            {% endif %}
-        </div>
+    <div>
+        <a href="/?d={{event.when | date}}" class="button">View in calendar</a>
 
         {% if mine %}
+    <span class="u-pull-right">
         <a href="/event/{{event._id}}/update" class="button">Edit</a>
+        <a href="/event/{{event._id}}/remove" class="button confirm">Cancel</a>
+    </span>
         {% endif %}
-
     </div>
+</div>
 </div>
 <script>
     var $s = $("#select-kid");
@@ -95,5 +111,13 @@
     });
     if ($s.find('option').length == 0)
         $("#add-kid-wrap").hide();
+
+    $(".confirm").click(function () {
+        var url = $(this).attr('href');
+        alert('Are you sure?', "Canceling the event will email anyone signed up.", function () {
+            location.href = url;
+        });
+        return false;
+    });
 </script>
 {% endblock %}

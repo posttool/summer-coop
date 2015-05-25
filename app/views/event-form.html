@@ -3,7 +3,7 @@
 {% block main %}
 <div class="container">
     <div class="main">
-        Event.
+        <h2>Event</h2>
         <form method="post">
             <div>
                 <label>When</label>
@@ -27,7 +27,9 @@
             </div>
 
             <button>Save</button>
-            {% if event._id %}<a href="/event/{{event._id}}/remove" class="button">Delete</a>{% endif %}
+            {% if event._id %}
+            <a href="/event/{{event._id}}/remove" class="button confirm">Cancel</a>
+            {% endif %}
         </form>
 
     </div>
