@@ -4,6 +4,7 @@
 <div class="container">
     <div class="main">
         <h2>Event</h2>
+
         <form method="post">
             <div>
                 <label>When</label>
@@ -34,4 +35,13 @@
 
     </div>
 </div>
+<script>
+    $(".confirm").click(function () {
+        var url = $(this).attr('href');
+        alert('Are you sure?', "Canceling the event will email anyone signed up.", function () {
+            location.href = url;
+        });
+        return false;
+    });
+</script>
 {% endblock %}

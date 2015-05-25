@@ -174,7 +174,7 @@ textarea {
 select {
     font-size: 1.8rem;
     border: 1px solid transparent;
-    margin-left:0;
+    margin-left: 0;
     padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
     box-shadow: none;
     background-color: #F2F2F2;
@@ -220,42 +220,21 @@ input.medium_size {
     font-weight: bold;
 }
 
-
-
 /* widgets */
 
-
 /*input[type="text"] {*/
-        /*width: 50%;*/
+/*width: 50%;*/
 /*}*/
 /*input[type='text']*/
 .error {
     color: #CB2227;
     margin-bottom: 4px;
 }
+
 .input-error-message {
     font-size: 1.3rem;
     padding-bottom: 10px;
     color: #CB2227;
-}
-#tabs {
-    padding-bottom: 40px;
-}
-.tab {
-    text-transform: uppercase;
-    border-top: 1px solid #999;
-    margin-top: 30px;
-    cursor: pointer;
-}
-
-.tab:hover {
-    color: #000;
-    border-top: 1px solid #111;
-}
-
-.tab.selected {
-    color: #CB2227;
-    border-top: 1px solid #CB2227;
 }
 
 .alert-gauze {
@@ -266,6 +245,12 @@ input.medium_size {
     height: 100%;
     background-color: rgba(50, 50, 50, .7);
     z-index: 9999999;
+
+    -webkit-animation: fadein .5s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein .5s; /* Firefox < 16 */
+        -ms-animation: fadein .5s; /* Internet Explorer */
+         -o-animation: fadein .5s; /* Opera < 12.1 */
+            animation: fadein .5s;
 }
 
 .alert-wrap {
@@ -280,7 +265,7 @@ input.medium_size {
 .alert-wrap .alert {
     padding: 20px;
     width: 50%;
-    height: 50%;
+    height: 200px;
     overflow: auto;
     margin: auto;
     position: absolute;
@@ -289,40 +274,39 @@ input.medium_size {
     bottom: 0;
     right: 0;
     background: #fff;
+
+    -webkit-animation: fadein .5s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein .5s; /* Firefox < 16 */
+        -ms-animation: fadein .5s; /* Internet Explorer */
+         -o-animation: fadein .5s; /* Opera < 12.1 */
+            animation: fadein .5s;
 }
 
-.item {
-    cursor: pointer;
-    min-height: 30px;
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
-.item:hover {
-    text-decoration: underline;
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
-.item .del {
-    padding-left: 5px;
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
-.item.selected {
-    font-weight: bold;
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
-.deleteEventButton {
-}
-
-.hidden {
-    display: none;
-}
-
-.schedule-day {
-    font-size: 1.8rem;
-}
-
-.schedule-hours {
-    font-size: 1.4rem;
-    padding-top: 15px;
-}
-.time.selected {
-    font-weight: bold;
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }

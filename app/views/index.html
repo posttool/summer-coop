@@ -20,7 +20,6 @@
     }
 
     .event_item {
-        background-color: #ffffc2;
         margin: 0 0 5px 0;
         padding: 3px 5px 3px 10px;
         font-size: 1.4rem;
@@ -29,11 +28,15 @@
         overflow: hidden;
     }
 
-    .event_item:hover {
+    .available {
+        background-color: #ffffc2;
+    }
+
+    .event_item.available:hover {
         background-color: #ffff00;
     }
 
-    .event_item.full {
+    .full {
         background-color: #fa5;
     }
 
@@ -56,8 +59,12 @@
         background-color: #eeeeee;
     }
 
-    .event.first-day-of-month {
+    .first-day-of-month {
         background-color: #a3d094;
+    }
+
+    .today {
+        background-color: #b5dfec;
     }
 
 </style>
@@ -85,21 +92,22 @@
         </div>
     </div>
     <div id="calendar">
-        Loading calendar...
+        Initializing...
     </div>
 
-    <script src="/js/lib/moment.min.js"></script>
     <script src="/js/events.js"></script>
     <script>
-        var a = window.location.search.substr(1).split('&');
-        var b = {};
-        for (var i = 0; i < a.length; ++i) {
-            var p = a[i].split('=');
-            if (p.length != 2) continue;
-            b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+        function query_params() {
+            var a = window.location.search.substr(1).split('&');
+            var b = {};
+            for (var i = 0; i < a.length; ++i) {
+                var p = a[i].split('=');
+                if (p.length != 2) continue;
+                b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+            }
+            return b;
         }
-        console.log(moment(b.d))
-        draw_cal_for(moment(b.d));
+        init_cal("{{user._id}}", moment(query_params().d));
     </script>
 
 

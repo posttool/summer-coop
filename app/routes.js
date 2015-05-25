@@ -12,6 +12,7 @@ module.exports = function (connection) {
   var User = models.getUser(connection);
   var Event = models.getEvent(connection);
   var Kid = models.getKid(connection);
+  var Message = models.getMessage(connection);
 
   app.get('/', function (req, res) {
     res.render('index.html');
@@ -56,8 +57,9 @@ module.exports = function (connection) {
   });
 
   app.get('/events', guard.isLoggedIn, function (req, res) {
-    var when = moment(req.query.d);
-    Event.find({when: {$gt: when}}).populate('leader').sort('when').exec(function (err, events) {
+    var when = moment(req.query.d).subtract(7, 'day');
+    var when_end = moment(when).add(35, 'day');
+    Event.find({when: {$gt: when, $lt: when_end}}).populate('leader').sort('when').exec(function (err, events) {
       res.json(events);
     });
   });
@@ -67,7 +69,7 @@ module.exports = function (connection) {
   });
 
   app.post('/event/create', guard.isLoggedIn, function (req, res) {
-    var event = new Event({
+    new Event({
       leader: req.user,
       when: moment(req.body.when),
       location: req.body.location,
@@ -75,10 +77,11 @@ module.exports = function (connection) {
       location: req.body.location,
       spaces: req.body.spaces,
       notes: req.body.notes
-    });
-    event.save(function () {
-      res.redirect('/event/' + event._id);
-    });
+    }).save(function (err, event) {
+        create_message(event, req.user, 'Created a new event.', function (err, m) {
+          res.redirect('/event/' + event._id);
+        });
+      });
   });
 
   app.get('/event/:id/update', guard.isLoggedIn, function (req, res) {
@@ -106,7 +109,9 @@ module.exports = function (connection) {
       e.spaces = req.body.spaces;
       e.notes = req.body.notes;
       e.save(function (err, se) {
-        res.render('event-form.html', {event: se});
+        create_message(e, req.user, 'Updated the event info.', function (err, m) {
+          res.render('event-form.html', {event: se});
+        });
       })
     });
   });
@@ -125,20 +130,59 @@ module.exports = function (connection) {
       } else {
         e.kids.push(kid);
         e.save(function (err, se) {
-          res.redirect('/event/' + e._id);
+          create_message(e, req.user, 'Added ' + kid.name + ' to the event.', function (err, m) {
+            res.redirect('/event/' + e._id);
+          });
         });
       }
     });
   });
 
-  app.get('/event/:id/remove/:kid', guard.isLoggedIn, function (req, res) {
+  app.get('/event/:id/remove/:kid', guard.isLoggedIn, function (req, res, next) {
     Event.findOne({_id: req.params.id}).exec(function (err, e) {
+      if (err) return next(err);
       var kid = e.kids.id(req.params.kid).remove();
       e.save(function (err, se) {
-        res.redirect('/event/' + e._id);
+        if (err) return next(err);
+        create_message(e, req.user, 'Removed ' + kid.name + ' from the event.', function (err, m) {
+          res.redirect('/event/' + e._id);
+        });
       })
     });
   });
+
+  app.get('/event/:id/messages', guard.isLoggedIn, function (req, res, next) {
+    Event.findOne({_id: req.params.id}).exec(function (err, e) {
+      if (err || !e)
+        throw new Error('requires event');
+      Message.find({event: e}).populate('from').exec(function (err, messages) {
+        if (err) return next(err);
+        res.json(messages);
+      })
+    });
+  });
+
+  app.post('/event/:id/message', guard.isLoggedIn, function (req, res, next) {
+    Event.findOne({_id: req.params.id}).exec(function (err, e) {
+      if (err || !e)
+        throw new Error('requires event');
+      create_message(e, req.user, req.body.text, function (err, m) {
+        res.json({error: err, message: m})
+      });
+    });
+  });
+
+  function create_message(event, user, text, complete) {
+    new Message({
+      when: new Date(),
+      event: event,
+      from: user,
+      text: text,
+      sent: false
+    }).save(function (err, m) {
+        complete(err, m)
+      });
+  }
 
   return app;
 };

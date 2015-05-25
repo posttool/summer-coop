@@ -10,6 +10,14 @@
         width: 150px;
         font-size: 1.7rem;
     }
+
+    #message-wrap {
+        margin: 20px 0 0 0;
+    }
+
+    #messages {
+        font-size: 1.5rem;
+    }
 </style>
 {% set mine = event.leader._id.toString() == user._id.toString() %}
 
@@ -85,17 +93,34 @@
             </table>
         </h3>
     </div>
-
     <div>
         <a href="/?d={{event.when | date}}" class="button">View in calendar</a>
-
         {% if mine %}
-    <span class="u-pull-right">
-        <a href="/event/{{event._id}}/update" class="button">Edit</a>
-        <a href="/event/{{event._id}}/remove" class="button confirm">Cancel</a>
-    </span>
+        <span class="u-pull-right">
+            <a href="/event/{{event._id}}/update" class="button">Edit</a>
+            <a href="/event/{{event._id}}/remove" class="button confirm">Cancel</a>
+        </span>
         {% endif %}
     </div>
+
+
+    <div id="message-wrap">
+        <table>
+            <tr>
+                <td><h4>Messages</h4></td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="messages"></div>
+            </tr>
+        </table>
+
+
+        <div>
+            <a href="#" class="button" id="post-message">POST MESSAGE</a>
+        </div>
+    </div>
+
 </div>
 </div>
 <script>
@@ -119,5 +144,36 @@
         });
         return false;
     });
+
+    $.ajax({url: "/event/{{event._id}}/messages"}).done(function (messages) {
+        var $m = $("#messages");
+        $m.empty();
+        messages.forEach(function (m) {
+            var $r = $$();
+            $r.append(moment(m.when).format('MM/DD h:mma') + " &nbsp; ");
+            $r.append(m.from.contact.name + " ");
+            $r.append('<b>'+m.text+'</b>');
+            $m.append($r);
+        })
+    }).error(function (e) {
+        console.error(e);
+    });
+
+    $("#post-message").click(function () {
+        var $t = $("<textarea></textarea>");
+        alert("Post a Message", $t, function () {
+            console.log($t.val());
+            $.ajax({
+                url: "/event/{{event._id}}/message",
+                type: "post",
+                data: {text: $t.val()}
+            }).done(function (message) {
+                location.reload();
+            }).error(function (e) {
+                console.error(e);
+            });
+        });
+        return false;
+    })
 </script>
 {% endblock %}

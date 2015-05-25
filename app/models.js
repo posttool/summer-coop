@@ -81,3 +81,18 @@ var eventSchema = mongoose.Schema({
 exports.getEvent = function (conn) {
   return conn.model('Event', eventSchema)
 };
+
+
+
+// MESSAGE
+var messageSchema = mongoose.Schema({
+  when: Date,
+  event: {type: ObjectId, ref: 'Event'},
+  from: {type: ObjectId, ref: 'User'},
+  text: String,
+  sent: Boolean
+});
+
+exports.getMessage = function (conn) {
+  return conn.model('Message', messageSchema)
+};

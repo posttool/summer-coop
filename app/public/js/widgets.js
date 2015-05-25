@@ -4,9 +4,9 @@ function alert(title, $pane, on_close) {
   var $a = $$($d).addClass('alert');
   var $h = $$($a).addClass('head');
   var $p = $$($a).addClass('content');
-  var $b = $$($a).addClass('buttons')
-  var $ok = $$($b).text('ok');
-  var $cancel = $$($b).text('cancel');
+  var $b = $$($a)
+  var $ok = $$($b).addClass('button').text('ok');
+  var $cancel = $$($b).addClass('button').text('cancel');
   $(document.body).append($c);
   $(document.body).append($d);
   function empty() {
@@ -14,7 +14,7 @@ function alert(title, $pane, on_close) {
     $c.remove();
   }
 
-  $h.text(title);
+  $h.append('<h3>'+title+'</h3>');
   $p.append($pane);
   $c.click(empty);
   $ok.click(function () {

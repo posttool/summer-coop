@@ -1,34 +1,16 @@
-//    <a href="/event/{{event._id}}/update">Edit</a>
-//    <a href="/event/create?date=" class="button">Add an Event</a>
-var d = moment();
-
-var $last = $("#last-month");
-$last.click(function () {
-  d.startOf('month');
-  d.subtract(1, 'month');
-  draw_cal_for()
-});
-
-var $sel = $("#select-month");
-$sel.change(function () {
-  d.month($sel.val());
-  d.startOf('month');
-  draw_cal_for()
-});
-var $next = $("#next-month");
-$next.click(function () {
-  d.startOf('month');
-  d.add(1, 'month');
-  draw_cal_for()
-});
-
-var now = moment().subtract(1, 'day');
+var now = moment();
 var evtidx = {};
+var d = moment();
+var u = null;
 
-function draw_cal_for(day) {
-  if (day)
-    d = day;
-  var $cal = $("#calendar");
+function init_cal(user, day) {
+  u = user;
+  d = day;
+  draw_cal_for();
+}
+function draw_cal_for() {
+
+  var $cal = $('#calendar');
   $cal.empty().text('Loading events...');
   $sel.val(d.format('MMMM'));
   $.ajax('/events?d=' + d.format('YYYY-MM-DD')).done(function (events) {
@@ -37,7 +19,7 @@ function draw_cal_for(day) {
     var d0 = moment(d);
     d0.startOf('week');
     for (var i = 0; i < 5; i++) {
-      var $row = $("<div class='row'></div>");
+      var $row = $('<div class="row"></div>');
       $cal.append($row);
       for (var j = 0; j < 7; j++) {
         var $c = get_calendar_item(moment(d0));
@@ -59,28 +41,35 @@ function index_events(events) {
   return evtidx;
 }
 function get_calendar_item(day) {
-  var before = day.isBefore(now);
-  var $c = $("<div class='four columns event'></div>");
+  var before = day.isBefore(moment(now).subtract(1, 'day'));
+  var $c = $('<div class="four columns event"></div>');
   if (before)
     $c.addClass('before');
-  var $d = $("<div class='event_header'></div>");
+  var $d = $('<div class="event_header"></div>');
   if (day.date() == 1) {
-    $d.append(day.format("MMMM D"));
+    $d.append(day.format('MMMM D'));
     $c.addClass('first-day-of-month');
   }
   else
-    $d.append(day.format("ddd D"));
+    $d.append(day.format('ddd D'));
+  if (day.month() == now.month() && day.date() == now.date())
+    $c.addClass('today');
   $c.append($d);
   var id = day.format('MM-DD');
   if (evtidx[id]) {
     evtidx[id].forEach(function (event) {
-      var $d = $("<div class='event_item'></div>");
-      //$d.append(event.leader.contact.name);
-      $d.append(moment(event.when).format("h:mm a") + " " + event.location)
+      var $d = $('<div class="event_item"></div>');
+      var x = '';
+      if (event.leader._id == u)
+        x = '<i class="fa fa-star"></i> ';
+      var hr = moment(event.when).format('ha');
+      $d.append(x + hr + ' ' + event.location + ' / ' + event.leader.contact.name);
       if (before)
         $d.addClass('before');
       if (event.spaces <= event.kids.length)
         $d.addClass('full');
+      else
+        $d.addClass('available');
       $d.click(function () {
         location.href = '/event/' + event._id;
       });
@@ -88,7 +77,7 @@ function get_calendar_item(day) {
     });
   }
   if (!before) {
-    var $add = $("<div class='event_add'><i class='fa fa-plus'></i> Add an event</div>");
+    var $add = $('<div class="event_add"><i class="fa fa-plus"></i> Add an event</div>');
     $add.hide();
     $c.append($add);
     $c.mouseover(function () {
@@ -98,8 +87,29 @@ function get_calendar_item(day) {
       $add.hide();
     });
     $add.click(function () {
-      location.href = "/event/create?d=" + day.format('YYYY-MM-DD')
+      location.href = '/event/create?d=' + day.format('YYYY-MM-DD')
     })
   }
   return $c;
 }
+
+// prev <select month> next
+var $last = $('#last-month');
+$last.click(function () {
+  d.startOf('month');
+  d.subtract(1, 'month');
+  draw_cal_for()
+});
+
+var $sel = $('#select-month');
+$sel.change(function () {
+  d.month($sel.val());
+  d.startOf('month');
+  draw_cal_for()
+});
+var $next = $('#next-month');
+$next.click(function () {
+  d.startOf('month');
+  d.add(1, 'month');
+  draw_cal_for()
+});
