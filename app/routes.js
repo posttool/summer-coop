@@ -23,9 +23,20 @@ module.exports = function (connection) {
 
   app.get('/profile', guard.isLoggedIn, function (req, res) {
     Event.find({leader: req.user}).exec(function (err, hosted) {
-
+      var total_kids_hosted = 0;
+      var total_attended = 0;
+      hosted.forEach(function (e) {
+        total_kids_hosted += e.kids.length;
+      });
       Event.find({kids: {$in: req.user.kids}}).exec(function (err, attended) {
-        res.render('user-form.html', {hosted: hosted, attended: attended});
+        attended.forEach(function (e) {
+          e.kids.forEach(function (k) {
+            if (req.user.hasKid(k))
+              total_attended++;
+          })
+        });
+        var points = total_kids_hosted - total_attended;
+        res.render('user-form.html', {hosted: hosted.length, attended: attended.length, points: points});
       });
     });
   });
