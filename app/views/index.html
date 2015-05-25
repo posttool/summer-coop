@@ -5,7 +5,6 @@
     .event {
         background-color: #eeeeee;
         padding: 7px 0 0 0;
-        margin-bottom: 12px;
         cursor: pointer;
         height: 160px;
     }
@@ -57,6 +56,10 @@
         background-color: #eeeeee;
     }
 
+    .event.first-day-of-month {
+        background-color: #a3d094;
+    }
+
 </style>
 <div class="container">
     {% if user %}
@@ -99,6 +102,7 @@
     <div><a href="/auth/google" class="button"><span class="fa fa-google-plus"></span> Google</a></div>
     <!--<div><a href="/auth/twitter" class="button"><span class="fa fa-twitter"></span> Twitter</a></div>-->
     <!--<div><a href="/auth/github" class="button"><span class="fa fa-google-plus"></span> Github</a></div>-->
+
     {% endif %}
 </div>
 {% endblock %}

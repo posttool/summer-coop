@@ -41,7 +41,7 @@
   width: 100%;
   box-sizing: border-box; }
 .row { 
-  margin-bottom: 2rem; }
+  margin-bottom: 8px; }
 .row .column:first-child,        
 .row .columns:first-child { 
   margin-left: 0; }
@@ -58,7 +58,7 @@
 
   .container .column,
   .container .columns {
-    margin-left: 4%; }
+    margin-left: 8px; }
   
   .container .one.column,
   .container .one.columns          { width: 4.66666666667%; }

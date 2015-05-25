@@ -20,9 +20,8 @@
     <header class="bottom-border">
         <div class="container">
             <div id="header__content">
-                <a href="/"><h1 id="header__title" class="u-pull-left"><i class="fa fa-home"></i> Summer Coop</h1></a>
-
-                <h1 id="header__title" class="u-pull-right">
+                <a href="/"><h1 class="header__title u-pull-left"><i class="fa fa-home"></i> Summer Coop</h1></a>
+                <h1 class="header__title u-pull-right">
                     {% if user %}
                     <span class="button" style="border:none;">{{user.contact.name}}</span>
                     <a href="/profile" class="button">Profile</a>
