@@ -1,6 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var moment = require('moment');
+var async = require('async');
 var guard = require('./auth/guard');
 var models = require('./models');
 
@@ -18,16 +19,24 @@ module.exports = function (connection) {
     res.render('index.html');
   });
 
+  /* User */
 
   app.get('/profile', guard.isLoggedIn, function (req, res) {
-    res.render('user-form.html');
+    Event.find({leader: req.user}).exec(function (err, hosted) {
+
+      Event.find({kids: {$in: req.user.kids}}).exec(function (err, attended) {
+        res.render('user-form.html', {hosted: hosted, attended: attended});
+      });
+    });
   });
 
-  app.post('/profile', guard.isLoggedIn, function (req, res) {
+  app.post('/profile', guard.isLoggedIn, function (req, res, next) {
     var user = req.user;
     user.contact.name = req.body.name;
     user.contact.phone1 = req.body.phone1;
     user.contact.phone2 = req.body.phone2;
+    var new_kids = [];
+    var updated_kids = [];
     for (var i = 0; i < req.body.kid.length / 3; i++) {
       var name = req.body.kid[i * 3];
       var bd = req.body.kid[i * 3 + 1];
@@ -39,14 +48,27 @@ module.exports = function (connection) {
         kid.name = name;
         kid.birthday = bd ? moment(bd) : null;
         kid.notes = notes;
+        updated_kids.push(kid);
       }
       else if (has_data) {
-        user.kids.push({name: name, birthday: bd ? moment(bd) : null, notes: notes});
+        var k = new Kid({name: name, birthday: bd ? moment(bd) : null, notes: notes});
+        new_kids.push(k);
+        user.kids.push(k);
       }
     }
-    user.save(function (err, su) {
-      console.log('save user', err, su);
-      res.render('user-form.html');
+    async.each(updated_kids, function (k, n) {
+      k.save(function (err, ks) {
+        if (err) return next(err);
+        n();
+      });
+    }, function () {
+      Kid.create(new_kids, function (err, ks) {
+        if (err) return next(err);
+        user.save(function (err, su) {
+          console.log('save user', err, su);
+          res.render('user-form.html');
+        });
+      });
     });
   });
 
@@ -55,6 +77,8 @@ module.exports = function (connection) {
       res.render('user-view.html', {user1: e});
     });
   });
+
+  /* Events */
 
   app.get('/events', guard.isLoggedIn, function (req, res) {
     var when = moment(req.query.d).subtract(7, 'day');
@@ -85,7 +109,7 @@ module.exports = function (connection) {
   });
 
   app.get('/event/:id/update', guard.isLoggedIn, function (req, res) {
-    Event.findOne({_id: req.params.id}, function (err, e) {
+    Event.findOne({_id: req.params.id}).populate('kids').exec(function (err, e) {
       res.render('event-form.html', {event: e});
     });
   });
@@ -117,15 +141,16 @@ module.exports = function (connection) {
   });
 
   app.get('/event/:id', guard.isLoggedIn, function (req, res) {
-    Event.findOne({_id: req.params.id}).populate('leader').exec(function (err, e) {
+    Event.findOne({_id: req.params.id}).populate('leader kids').exec(function (err, e) {
       res.render('event-view.html', {event: e});
     });
   });
 
-  app.get('/event/:id/add/:kid', guard.isLoggedIn, function (req, res) {
-    Event.findOne({_id: req.params.id}).exec(function (err, e) {
-      var kid = req.user.kids.id(req.params.kid);
-      if (e.kids.id(kid)) {
+  app.get('/event/:id/add/:kid', guard.isLoggedIn, function (req, res, next) {
+    Event.findOne({_id: req.params.id}).populate('leader kids').exec(function (err, e) {
+      var kid = req.user.getKid(req.params.kid);
+      if (!kid) return next(new Error('no such kid'));
+      if (e.hasKid(kid)) {
         res.redirect('/event/' + e._id);
       } else {
         e.kids.push(kid);
@@ -139,17 +164,21 @@ module.exports = function (connection) {
   });
 
   app.get('/event/:id/remove/:kid', guard.isLoggedIn, function (req, res, next) {
+    var kid = req.user.getKid(req.params.kid);
+    if (!kid) return next(new Error('no such kid'));
     Event.findOne({_id: req.params.id}).exec(function (err, e) {
       if (err) return next(err);
-      var kid = e.kids.id(req.params.kid).remove();
-      e.save(function (err, se) {
-        if (err) return next(err);
-        create_message(e, req.user, 'Removed ' + kid.name + ' from the event.', function (err, m) {
-          res.redirect('/event/' + e._id);
-        });
-      })
-    });
+      Event.update(
+        {_id: req.params.id},
+        {$pull: {kids: kid}}).exec(function (err, s) {
+          if (err) return next(err);
+          create_message(e, req.user, 'Removed ' + kid.name + ' from the event.', function (err, m) {
+            res.redirect('/event/' + e._id);
+          });
+        })
+    })
   });
+
 
   app.get('/event/:id/messages', guard.isLoggedIn, function (req, res, next) {
     Event.findOne({_id: req.params.id}).exec(function (err, e) {
@@ -185,4 +214,5 @@ module.exports = function (connection) {
   }
 
   return app;
-};
+}
+;

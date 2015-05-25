@@ -60,7 +60,7 @@ function get_calendar_item(day) {
     evtidx[id].forEach(function (event) {
       var $d = $('<div class="event_item"></div>');
       var x = '';
-      if (event.leader._id == u)
+      if (event.leader && event.leader._id == u)
         x = '<i class="fa fa-star"></i> ';
       var hr = moment(event.when).format('ha');
       $d.append(x + hr + ' ' + event.location + ' / ' + event.leader.contact.name);

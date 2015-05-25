@@ -1,8 +1,27 @@
 {% extends "base.html" %}
 
 {% block main %}
+<style>
+    .big {
+        font-size: 4rem;
+        background-color: #eee;
+        padding: 4rem;
+        text-align: center;;
+    }
+</style>
 <div class="container">
     <div class="main">
+        <div class="row">
+            <div class="four columns big">
+                Hosted: {{hosted.length}}
+            </div>
+            <div class="four columns big">
+                Attended: {{attended.length}}
+            </div>
+            <div class="four columns big">
+                Points: {{attended.length}}
+            </div>
+        </div>
         <form method="post">
             <div>
                 <label>Name</label>
@@ -16,36 +35,48 @@
                 <label>Phone Alternate</label>
                 <input type="text" name="phone2" value="{{user.contact.phone2}}">
             </div>
-            <div>
-                <label>Children</label>
 
+            <br>
+
+            <div id="kid-wrapper">
+                <table>
+                    <tr>
+                        <td><h3>Children</h3></td>
+                    </tr>
+                </table>
+
+                {% for kid in user.kids %}
                 <div class="row">
-                    <input type="text" name="kid" value="{{user.kids[0].name}}"
-                           class="four columns medium_size"
-                           placeholder="Name">
-                    <input type="text" name="kid" {% if user.kids[0].birthday %}value="{{user.kids[0].birthday | date('MM/DD/YYYY')}}"{% endif %}
-                           class="four columns medium_size"
-                           placeholder="Birthday MM/DD/YYYY">
-                    <input type="text" name="kid" value="{{user.kids[0].notes}}"
-                           class="four columns medium_size"
-                           placeholder="Notes">
+                    <input type="text" name="kid" value="{{kid.name}}"
+                           class="four columns medium_size" placeholder="Name">
+                    <input type="text" name="kid"
+                           {% if kid.birthday %} value="{{kid.birthday | date('MM/DD/YYYY')}}" {% endif %}
+                           class="four columns medium_size" placeholder="Birthday MM/DD/YYYY">
+                    <input type="text" name="kid" value="{{kid.notes}}"
+                           class="four columns medium_size" placeholder="Notes">
                 </div>
-                <div class="row">
-                    <input type="text" name="kid" value="{{user.kids[1].name}}" class="four columns medium_size">
-                    <input type="text" name="kid" {% if user.kids[1].birthday %}value="{{user.kids[1].birthday | date('MM/DD/YYYY')}}"{% endif %}
-                           class="four columns medium_size">
-                    <input type="text" name="kid" value="{{user.kids[1].notes}}" class="four columns medium_size">
+                {% endfor %}
+
+                <div class="row" id="kid-template">
+                    <input type="text" name="kid" class="four columns medium_size" placeholder="Name">
+                    <input type="text" name="kid" class="four columns medium_size" placeholder="Birthday MM/DD/YYYY">
+                    <input type="text" name="kid" class="four columns medium_size" placeholder="Notes">
                 </div>
-                <div class="row">
-                    <input type="text" name="kid" value="{{user.kids[2].name}}" class="four columns medium_size">
-                    <input type="text" name="kid" {% if user.kids[2].birthday %}value="{{user.kids[2].birthday | date('MM/DD/YYYY')}}"{% endif %}
-                           class="four columns medium_size">
-                    <input type="text" name="kid" value="{{user.kids[2].notes}}" class="four columns medium_size">
-                </div>
+
             </div>
-            <button>Save</button>
+                <a href="#" id="add-kid">Add a kid</a>
+
+            <br><br>
+                        <button>Save</button>
+
         </form>
 
     </div>
 </div>
+<script>
+    $("#add-kid").click(function () {
+        $("#kid-wrapper").append($("#kid-template").clone());
+        return false;
+    });
+</script>
 {% endblock %}

@@ -31,6 +31,7 @@
     "passport-google-oauth": "^0.2.0",
     "mongoose": "^4.0.3",
     "bcrypt-nodejs": "0.0.3",
-    "nunjucks-date-filter": "^0.1.0"
+    "nunjucks-date-filter": "^0.1.0",
+    "async": "^1.0.0"
   }
 }

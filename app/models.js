@@ -12,6 +12,7 @@ var kidSchema = mongoose.Schema({
   notes: String
 });
 
+
 exports.getKid = function (conn) {
   return conn.model('Kid', kidSchema)
 };
@@ -47,7 +48,7 @@ var userSchema = mongoose.Schema({
     phone1: String,
     phone2: String
   },
-  kids: [kidSchema]
+  kids: [{type: ObjectId, ref: 'Kid'}]
 });
 
 userSchema.methods.generateHash = function (password) {
@@ -58,12 +59,21 @@ userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.local.password);
 };
 
+userSchema.methods.getKid = function (id) {
+  for (var i = 0; i < this.kids.length; i++) {
+    var k = this.kids[i];
+    if (id == k._id.toString())
+      return k;
+  }
+  return null;
+};
+userSchema.methods.hasKid = function (id) {
+  return this.getKid(id) != null;
+};
+
 exports.getUser = function (conn) {
   return conn.model('User', userSchema)
 };
-
-
-
 
 
 // EVENT
@@ -75,13 +85,22 @@ var eventSchema = mongoose.Schema({
   leader: {type: ObjectId, ref: 'User'},
   backup: {type: ObjectId, ref: 'User'},
   notes: String,
-  kids: [kidSchema]
+  kids: [{type: ObjectId, ref: 'Kid'}]
 });
-
+eventSchema.methods.getKid = function (id) {
+  for (var i = 0; i < this.kids.length; i++) {
+    var k = this.kids[i];
+    if (id == k._id.toString())
+      return k;
+  }
+  return null;
+};
+eventSchema.methods.hasKid = function (id) {
+  return this.getKid(id) != null;
+}
 exports.getEvent = function (conn) {
   return conn.model('Event', eventSchema)
 };
-
 
 
 // MESSAGE

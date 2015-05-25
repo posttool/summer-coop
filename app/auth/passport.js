@@ -19,7 +19,7 @@ module.exports = function (passport, User, configAuth) {
 
   // used to deserialize the user
   passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, user) {
+    User.findById(id).populate('kids').exec(function (err, user) {
       done(err, user);
     });
   });
@@ -37,7 +37,7 @@ module.exports = function (passport, User, configAuth) {
       if (email)
         email = email.toLowerCase(); // Use lower-case e-mails to avoid case-sensitive e-mail matching
       process.nextTick(function () {
-        User.findOne({ 'local.email': email }, function (err, user) {
+        User.findOne({'local.email': email}, function (err, user) {
           if (err)
             return done(err);
           if (!user || !user.validPassword(password))
@@ -64,7 +64,7 @@ module.exports = function (passport, User, configAuth) {
       process.nextTick(function () {
         // if the user is not already logged in:
         if (!req.user) {
-          User.findOne({ 'local.email': email }, function (err, user) {
+          User.findOne({'local.email': email}, function (err, user) {
             if (err)
               return done(err);
             if (user) {
@@ -109,8 +109,8 @@ module.exports = function (passport, User, configAuth) {
     function (req, token, refreshToken, profile, done) {
       process.nextTick(function () {
         if (!req.user) {
-          User.findOne({ 'facebook.id': profile.id }, function (err, user) {
-          console.log("XXX?",err,user)
+          User.findOne({'facebook.id': profile.id}, function (err, user) {
+            console.log("XXX?", err, user)
             if (err)
               return done(err);
             if (user) {
@@ -178,7 +178,7 @@ module.exports = function (passport, User, configAuth) {
       process.nextTick(function () {
         // check if the user is already logged in
         if (!req.user) {
-          User.findOne({ 'google.id': profile.id }, function (err, user) {
+          User.findOne({'google.id': profile.id}, function (err, user) {
             if (err)
               return done(err);
             if (user) {

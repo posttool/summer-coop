@@ -64,7 +64,7 @@
                             {% for k in event.kids %}
                             {% if k.name %}
                             {{k.name}}
-                            {% if user.kids.id(k._id) %}
+                            {% if user.hasKid(k._id) %}
                             <a href="#" class="remove" data-id="{{k._id}}"><i class="fa fa-times-circle"></i></a>
                             {% endif %}
                             <br>
@@ -80,7 +80,7 @@
                             <a href="#" id="add-kid">Add</a>
                             <select id="select-kid">
                                 {% for k in user.kids %}
-                                {% if not event.kids.id(k._id) %}
+                                {% if not event.hasKid(k._id) %}
                                 <option value="{{k._id}}">{{k.name}}</option>
                                 {% endif %}
                                 {% endfor %}
