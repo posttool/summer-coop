@@ -84,7 +84,7 @@ module.exports = function (connection) {
   });
 
   app.get('/user/:id', guard.isLoggedIn, function (req, res) {
-    User.findOne({_id: req.params.id}, function (err, e) {
+    User.findOne({_id: req.params.id}).populate('kids').exec(function (err, e) {
       res.render('user-view.html', {user1: e});
     });
   });

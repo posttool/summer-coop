@@ -9,18 +9,20 @@ function init_cal(user, day) {
   draw_cal_for();
 }
 function draw_cal_for() {
-
   var $cal = $('#calendar');
   $cal.empty().text('Loading events...');
   $sel.val(d.format('MMMM'));
   $.ajax('/events?d=' + d.format('YYYY-MM-DD')).done(function (events) {
     index_events(events);
     $cal.empty();
+    var $t = $("<table></table>");
+    $cal.append($t);
     var d0 = moment(d);
+    d0.startOf('month');
     d0.startOf('week');
     for (var i = 0; i < 5; i++) {
-      var $row = $('<div class="row"></div>');
-      $cal.append($row);
+      var $row = $('<tr valign="top"></tr>');
+      $t.append($row);
       for (var j = 0; j < 7; j++) {
         var $c = get_calendar_item(moment(d0));
         $row.append($c);
@@ -42,7 +44,7 @@ function index_events(events) {
 }
 function get_calendar_item(day) {
   var before = day.isBefore(moment(now).subtract(1, 'day'));
-  var $c = $('<div class="four columns event"></div>');
+  var $c = $('<td class="event"></td>');
   if (before)
     $c.addClass('before');
   var $d = $('<div class="event_header"></div>');
@@ -52,6 +54,9 @@ function get_calendar_item(day) {
   }
   else
     $d.append(day.format('ddd D'));
+  if (day.month() == d.month()) {
+    $d.css({"font-weight": "bold"})
+  }
   if (day.month() == now.month() && day.date() == now.date())
     $c.addClass('today');
   $c.append($d);

@@ -48,7 +48,8 @@ var userSchema = mongoose.Schema({
     phone1: String,
     phone2: String
   },
-  kids: [{type: ObjectId, ref: 'Kid'}]
+  kids: [{type: ObjectId, ref: 'Kid'}],
+  sendMail: {type: Boolean, default: true}
 });
 
 userSchema.methods.generateHash = function (password) {
@@ -85,7 +86,8 @@ var eventSchema = mongoose.Schema({
   leader: {type: ObjectId, ref: 'User'},
   backup: {type: ObjectId, ref: 'User'},
   notes: String,
-  kids: [{type: ObjectId, ref: 'Kid'}]
+  kids: [{type: ObjectId, ref: 'Kid'}],
+  sent: {type: Boolean, default: false}
 });
 eventSchema.methods.getKid = function (id) {
   for (var i = 0; i < this.kids.length; i++) {
@@ -109,7 +111,7 @@ var messageSchema = mongoose.Schema({
   event: {type: ObjectId, ref: 'Event'},
   from: {type: ObjectId, ref: 'User'},
   text: String,
-  sent: Boolean
+  sent: {type: Boolean, default: false}
 });
 
 exports.getMessage = function (conn) {

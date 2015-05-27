@@ -2,11 +2,19 @@
 
 {% block main %}
 <style>
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
     .event {
-        background-color: #eeeeee;
+        background-color: #fff;
+        border: 1px solid #ccc;
         padding: 7px 0 0 0;
         cursor: pointer;
         height: 160px;
+        width: 14.28%;
     }
 
     .event:hover {
@@ -14,7 +22,6 @@
     }
 
     .event_header {
-        font-weight: bold;
         margin: 0 0 15px 0;
         padding: 0 0 0 10px;
     }
@@ -56,26 +63,18 @@
 
     .before {
         opacity: .4;
-        background-color: #eeeeee;
-    }
-
-    .first-day-of-month {
-        background-color: #a3d094;
+        background-color: #fefefe;
     }
 
     .today {
-        background-color: #b5dfec;
-    }
-
-    .row {
-        margin-bottom: 8px;
+        border: 2px solid black;
     }
 
     @media (min-width: 550px) {
 
         .container .column,
         .container .columns {
-            margin-left: 8px;
+            margin-left: 0px;
         }
     }
 </style>
