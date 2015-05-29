@@ -126,7 +126,7 @@ module.exports = function (connection) {
   });
 
   app.get('/event/:id/remove', guard.isLoggedIn, function (req, res, next) {
-    Event.remove({leader: req.user, _id: req.params.id}, function (err, e) {
+    Event.findOne({leader: req.user, _id: req.params.id}, function (err, e) {
       if (err || !e)
         next(new Error('not found'));
       res.redirect('/');
@@ -145,7 +145,7 @@ module.exports = function (connection) {
       e.notes = req.body.notes;
       e.save(function (err, se) {
         create_message(e, req.user, 'Updated the event info.', function (err, m) {
-          res.render('event-form.html', {event: se});
+          res.redirect('/event/' + e._id);
         });
       })
     });

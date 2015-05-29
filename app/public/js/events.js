@@ -68,7 +68,7 @@ function get_calendar_item(day) {
       if (event.leader && event.leader._id == u)
         x = '<i class="fa fa-star"></i> ';
       var hr = moment(event.when).format('ha');
-      $d.append(x + hr + ' ' + event.location + ' / ' + event.leader.contact.name);
+      $d.append(x + hr + ' ' + event.location );
       if (before)
         $d.addClass('before');
       if (event.spaces <= event.kids.length)
