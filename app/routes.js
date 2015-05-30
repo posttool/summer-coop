@@ -4,7 +4,8 @@ var moment = require('moment');
 var async = require('async');
 var guard = require('./auth/guard');
 var models = require('./models');
-
+var config = require('./config')
+var mg = new Mailgun(config.mailgun);
 
 module.exports = function (connection) {
 
@@ -109,7 +110,6 @@ module.exports = function (connection) {
       when: moment(req.body.when),
       location: req.body.location,
       duration: req.body.duration,
-      location: req.body.location,
       spaces: req.body.spaces,
       notes: req.body.notes
     }).save(function (err, event) {
@@ -140,7 +140,6 @@ module.exports = function (connection) {
       e.when = moment(req.body.when);
       e.location = req.body.location;
       e.duration = req.body.duration;
-      e.location = req.body.location;
       e.spaces = req.body.spaces;
       e.notes = req.body.notes;
       e.save(function (err, se) {
@@ -190,7 +189,6 @@ module.exports = function (connection) {
     })
   });
 
-
   app.get('/event/:id/messages', guard.isLoggedIn, function (req, res, next) {
     Event.findOne({_id: req.params.id}).exec(function (err, e) {
       if (err || !e)
@@ -226,4 +224,4 @@ module.exports = function (connection) {
 
   return app;
 }
-;
+

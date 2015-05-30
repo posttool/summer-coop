@@ -1,45 +1,39 @@
 var config = {
   development: {
-    ports: {
-      cms: 3002,
-      site: 5000
-    },
+    port: 5000,
     cluster: false,
+    url: 'http://localhost:5000',
     db: 'mongodb://localhost/summer-coop-1',
-    api_endpoint: 'http://localhost:5000',
+    mailgun: 'key-1c328de125b80d29c470367f397840b1',
+    sender: 'coop@pagesociety.net',
 
-
-    /*
-    http://gadgets.ndtv.com/apps/features/how-to-remove-facebook-twitter-gmail-linkedin-dropbox-app-permissions-574272
-    */
     facebookAuth: {
       clientID: '1398148860511689',
       clientSecret: 'e52687d11e97f5b8d89236e42b55a588',
       callbackURL: 'http://localhost:5000/auth/facebook/callback'
     },
-    twitterAuth: {
-      consumerKey: 'xxx',
-      consumerSecret: 'xxx',
-      callbackURL: 'http://localhost:5000/auth/twitter/callback'
-    },
     googleAuth: {
       clientID: '480518992161-3qq0ag0gti0r015alf7jb7epbs3fb5kd.apps.googleusercontent.com',
       clientSecret: 'H3gH3tkMSWa0zlVNvqPuJnvw',
       callbackURL: 'http://localhost:5000/auth/google/callback'
-    },
-
+    }
+//    twitterAuth: {
+//      consumerKey: 'xxx',
+//      consumerSecret: 'xxx',
+//      callbackURL: 'http://localhost:5000/auth/twitter/callback'
+//    }
   },
 
   production: {
-    server_port: 80,
+    port: 80,
     cluster: true,
+    url: 'http://pagesociety.net',
     db: 'mongodb://localhost/summer-coop-1',
-    api_endpoint: 'http://summercoop.com',
-    cms_url: 'http://summercoop.com',
+    mailgun: 'key-1c328de125b80d29c470367f397840b1',
+    sender: 'coop@pagesociety.net',
 
     facebookAuth: {},
     googleAuth: {},
-    twilio: {},
 
 
   }
