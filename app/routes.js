@@ -77,7 +77,7 @@ module.exports = function (connection) {
         if (err) return next(err);
         user.save(function (err, su) {
           console.log('save user', err, su);
-          res.render('user-form.html');
+          res.redirect('/profile');
         });
       });
     });
