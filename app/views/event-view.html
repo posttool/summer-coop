@@ -54,10 +54,12 @@
                     <td>{{event.notes}}</td>
                 </tr>
                 {% endif %}
+                {% if not event.isOver() %}
                 <tr>
                     <td>Available</td>
                     <td>{{event.spaces - event.kids.length}}</td>
                 </tr>
+                {% endif %}
                 <tr valign="top">
                     <td>Attending</td>
                     <td>
@@ -75,9 +77,8 @@
                             No one <i>yet</i>.
                             {% endif %}
                         </div>
-
                         <div id="add-kid-wrap">
-                            {% if not mine %}
+                            {% if not mine and not event.isOver() %}
                             <a href="#" id="add-kid">Add</a>
                             <select id="select-kid">
                                 {% for k in user.kids %}
@@ -96,7 +97,7 @@
     </div>
     <div>
         <a href="/?d={{event.when | date}}" class="button">View in calendar</a>
-        {% if mine %}
+        {% if mine and not event.isOver() %}
         <span class="u-pull-right">
             <a href="/event/{{event._id}}/update" class="button">Edit</a>
             <a href="/event/{{event._id}}/remove" class="button confirm">Cancel</a>
@@ -153,7 +154,7 @@
             var $r = $$();
             $r.append(moment(m.when).format('MM/DD h:mma') + " &nbsp; ");
             $r.append(m.from.contact.name + " ");
-            $r.append('<b>'+m.text+'</b>');
+            $r.append('<b>' + m.text + '</b>');
             $m.append($r);
         })
     }).error(function (e) {

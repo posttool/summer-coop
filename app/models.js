@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var bcrypt = require('bcrypt-nodejs');
-
+var moment = require('moment');
 
 // KIDS
 
@@ -11,8 +11,6 @@ var kidSchema = mongoose.Schema({
   birthday: Date,
   notes: String
 });
-
-
 exports.getKid = function (conn) {
   return conn.model('Kid', kidSchema)
 };
@@ -48,7 +46,9 @@ var userSchema = mongoose.Schema({
     phone1: String,
     phone2: String
   },
-  kids: [{type: ObjectId, ref: 'Kid'}],
+  kids: [
+    {type: ObjectId, ref: 'Kid'}
+  ],
   sendMail: {type: Boolean, default: true}
 });
 
@@ -86,9 +86,12 @@ var eventSchema = mongoose.Schema({
   leader: {type: ObjectId, ref: 'User'},
   backup: {type: ObjectId, ref: 'User'},
   notes: String,
-  kids: [{type: ObjectId, ref: 'Kid'}],
+  kids: [
+    {type: ObjectId, ref: 'Kid'}
+  ],
   sent: {type: Boolean, default: false}
 });
+
 eventSchema.methods.getKid = function (id) {
   for (var i = 0; i < this.kids.length; i++) {
     var k = this.kids[i];
@@ -97,9 +100,15 @@ eventSchema.methods.getKid = function (id) {
   }
   return null;
 };
+
 eventSchema.methods.hasKid = function (id) {
   return this.getKid(id) != null;
 }
+
+eventSchema.methods.isOver = function () {
+  return moment(this.when) < moment();
+}
+
 exports.getEvent = function (conn) {
   return conn.model('Event', eventSchema)
 };
