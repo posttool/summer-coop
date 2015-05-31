@@ -35,12 +35,12 @@ var config = {
      facebookAuth: {
       clientID: '1398148860511689',
       clientSecret: 'e52687d11e97f5b8d89236e42b55a588',
-      callbackURL: 'http://localhost:5000/auth/facebook/callback'
+      callbackURL: 'http://pagesociety.net/auth/facebook/callback'
     },
     googleAuth: {
       clientID: '480518992161-3qq0ag0gti0r015alf7jb7epbs3fb5kd.apps.googleusercontent.com',
       clientSecret: 'H3gH3tkMSWa0zlVNvqPuJnvw',
-      callbackURL: 'http://localhost:5000/auth/google/callback'
+      callbackURL: 'http://pagesociety.net/auth/google/callback'
     }
 
 
