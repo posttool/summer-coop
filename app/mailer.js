@@ -82,8 +82,8 @@ function send_new_messages(complete) {
 }
 
 function send_mail(recipients, title, text, next) {
-  console.log('mail', title, recipients);
-  console.log('    ', text);
+  console.log('mail', title);
+//  console.log('    ', text);
   mg.sendText(config.sender, recipients, '[summer-coop] ' + title, text,
     function (err) {
       if (err) console.log('Oh noes: ' + err);

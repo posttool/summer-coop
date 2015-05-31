@@ -4,10 +4,10 @@ then
     echo restart
     forever restart 0
 else
-    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-    export NODE_ENV=production
+    DIR=/root/summer-coop/app
     echo start $DIR
     cd $DIR
+    export NODE_ENV=production
     forever start server.js
     forever logs 0
 fi

@@ -25,7 +25,7 @@ var config = {
   },
 
   production: {
-    port: 3000,
+    port: 80,
     cluster: true,
     url: 'http://pagesociety.net',
     db: 'mongodb://localhost/summer-coop-1',
