@@ -5,7 +5,6 @@ var async = require('async');
 var guard = require('./auth/guard');
 var models = require('./models');
 var config = require('./config')
-var mg = new Mailgun(config.mailgun);
 
 module.exports = function (connection) {
 

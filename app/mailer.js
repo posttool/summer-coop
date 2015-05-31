@@ -131,6 +131,7 @@ function get_messages(event, complete) {
 }
 
 exports.sendMail = function (complete) {
+  console.log('mailer.sendMail '+moment());
   send_new_events(send_new_messages(complete));
 }
 

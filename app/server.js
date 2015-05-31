@@ -25,9 +25,20 @@ var connection = mongoose.createConnection(config.db);
 
 
 if (cluster.isMaster && config.cluster) {
+  var later = require('later');
+  var mailer = require('./mailer');
+
+  console.log('summer coop 0.1 ' + process.env.NODE_ENV)
+
+  var s = later.parse.text('at 4:00 pm');
+  console.log('mailer service starting ' + s.error + ' ' + mailer.sendMail);
+  later.setInterval(mailer.sendMail, s);
+
   var cpuCount = require('os').cpus().length;
   for (var i = 0; i < cpuCount; i += 1)
     cluster.fork();
+
+
 } else {
 
   // initialize passport strategies
@@ -78,15 +89,15 @@ if (cluster.isMaster && config.cluster) {
   app.use(require('./routes')(connection));
 
   var httpServer = http.createServer(app);
-  httpServer.listen(config.ports.site);
-  console.log('site listening on port ' + config.ports.site);
+  httpServer.listen(config.port);
+  console.log('site listening on port ' + config.port);
   //var httpsServer = https.createServer(credentials, server);
   //httpsServer.listen(config.securePorts.site);
 
 }
 
-if (config.cluster)
-  cluster.on('exit', function (worker) {
-    console.log('Worker ' + worker.id + ' died :(');
-    cluster.fork();
-  });
+//if (config.cluster)
+//  cluster.on('exit', function (worker) {
+//    console.log('Worker ' + worker.id + ' died :(');
+//    cluster.fork();
+//  });
